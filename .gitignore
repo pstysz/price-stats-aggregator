@@ -1,0 +1,14 @@
+.idea/libraries/
+.idea/workspace.xml
+.idea/copyright/profiles_settings.xml
+hadoop/.mvn/wrapper/maven-wrapper.jar
+hadoop/.mvn/wrapper/maven-wrapper.properties
+hadoop/mvnw
+hadoop/mvnw.cmd
+rest-api/.mvn/wrapper/maven-wrapper.jar
+rest-api/.mvn/wrapper/maven-wrapper.properties
+rest-api/mvnw.cmd
+rest-api/mvnw
+rest-api/.mvn/
+hadoop/.mvn/
+rest-api/src/main/resources/sensitive.properties
