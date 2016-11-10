@@ -1,17 +1,15 @@
 package com.stats.aggregator.config;
 
-import com.stats.aggregator.common.utils.PropertiesHelper;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import org.springframework.context.annotation.ComponentScan;
+import com.stats.aggregator.common.utils.PropertiesHelper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 
 @Configuration
-@ComponentScan("com.stats.aggregator.data")
-@EnableMongoRepositories("com.stats.aggregator.data.repositories")
+@EnableMongoRepositories("com.stats.aggregator.repositories")
 public class DatabaseConfig extends AbstractMongoConfiguration {
 
     @Override

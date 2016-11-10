@@ -8,6 +8,8 @@
       <list>
         <option value="$PROJECT_DIR$/rest-api/pom.xml" />
         <option value="$PROJECT_DIR$/hadoop/pom.xml" />
+        <option value="$PROJECT_DIR$/data-objects/pom.xml" />
+        <option value="$PROJECT_DIR$/common/pom.xml" />
       </list>
     </option>
   </component>

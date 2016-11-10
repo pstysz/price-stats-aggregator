@@ -1,8 +1,8 @@
 package com.stats.aggregator.config;
 
 
-import com.stats.aggregator.data.repositories.allegroApiClient.WebApiService;
-import com.stats.aggregator.data.repositories.allegroApiClient.WebApiServiceLocator;
+import com.stats.aggregator.repositories.allegroApiClient.WebApiService;
+import com.stats.aggregator.repositories.allegroApiClient.WebApiServiceLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
