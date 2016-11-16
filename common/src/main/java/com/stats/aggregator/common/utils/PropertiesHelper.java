@@ -17,21 +17,8 @@ public final class PropertiesHelper {
         InputStream input = null;
 
         try {
-            File folder = new File(".\\src\\main\\resources");
-            File[] listOfFiles = folder.listFiles();
+            initializer(prop, input);
 
-            if(listOfFiles != null) {
-                for (File file : listOfFiles) {
-                    if (file.isFile()) {
-                        input = PropertiesHelper.class.getClassLoader().getResourceAsStream(file.getName());
-                        if (input == null) {
-                            continue;
-                        }
-
-                        prop.load(input);
-                    }
-                }
-            }
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -62,5 +49,38 @@ public final class PropertiesHelper {
      */
     public static String getProperty(String name, String defaultValue){
         return prop.getProperty(name, defaultValue);
+    }
+
+
+
+    private static void initializer(Properties prop, InputStream input) throws  IOException{
+
+        String resourcesLocation = "\\src\\main\\resources";
+
+        File[] globalFolderContent = new File(".").listFiles();
+        if(globalFolderContent == null)
+            return;
+
+        for(File dir : globalFolderContent){
+            if(dir == null || !dir.isDirectory())
+                continue;
+
+            File folder = new File(dir.getName() + resourcesLocation);
+            File[] listOfFiles = folder.listFiles();
+
+            if(listOfFiles == null)
+                continue;
+
+            for (File file : listOfFiles) {
+                if (file.isFile()) {
+                    input = PropertiesHelper.class.getClassLoader().getResourceAsStream(file.getName());
+                    if (input == null) {
+                        continue;
+                    }
+
+                    prop.load(input);
+                }
+            }
+        }
     }
 }

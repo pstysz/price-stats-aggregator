@@ -7,10 +7,9 @@ import com.stats.aggregator.allegroobj.contracts.DoGetCatsDataRequest;
 import com.stats.aggregator.allegroobj.contracts.DoGetCatsDataResponse;
 import com.stats.aggregator.allegroobj.contracts.DoGetItemsListRequest;
 import com.stats.aggregator.allegroobj.contracts.DoGetItemsListResponse;
+import com.stats.aggregator.repositories.allegroApiClient.WebApiServicePort;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import com.stats.aggregator.repositories.allegroApiClient.WebApiService;
-import com.stats.aggregator.repositories.allegroApiClient.WebApiServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,8 @@ public class WebApiProxyService implements IWebApiProxyService {
     private final WebApiServicePort allegroClient;
 
     @Autowired
-    public WebApiProxyService(WebApiService allegroWebApiService) throws ServiceException {
-        this.allegroClient = allegroWebApiService.getservicePort();
+    public WebApiProxyService(WebApiServicePort webApiServicePort) throws ServiceException {
+        this.allegroClient = webApiServicePort;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class WebApiProxyService implements IWebApiProxyService {
         try {
             FilterOptionsType fotcat = new FilterOptionsType();
             fotcat.setFilterId("category");
-            String[] categories = new String[]{"149"};
+            String[] categories = new String[]{"4029"};
             fotcat.setFilterValueId(categories);
             FilterOptionsType[] filter = new FilterOptionsType[]{fotcat};
 

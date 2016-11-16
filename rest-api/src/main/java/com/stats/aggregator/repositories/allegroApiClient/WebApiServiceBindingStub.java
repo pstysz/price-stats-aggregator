@@ -9,6 +9,7 @@ package com.stats.aggregator.repositories.allegroApiClient;
 
 import com.stats.aggregator.allegroobj.containers.*;
 import com.stats.aggregator.allegroobj.contracts.*;
+import org.springframework.stereotype.Service;
 
 public class WebApiServiceBindingStub extends org.apache.axis.client.Stub implements WebApiServicePort {
     private java.util.Vector cachedSerClasses = new java.util.Vector();

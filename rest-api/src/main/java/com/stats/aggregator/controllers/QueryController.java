@@ -1,15 +1,14 @@
 package com.stats.aggregator.controllers;
 
-import com.stats.aggregator.services.contracts.ServiceResult;
-import com.stats.aggregator.services.contracts.IAccountService;
-import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.DTOs.Query;
-import com.stats.aggregator.DTOs.User;
+import com.stats.aggregator.services.contracts.IQueryService;
+import com.stats.aggregator.services.contracts.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,12 +19,10 @@ import org.springframework.web.bind.annotation.*;
 public class QueryController {
 
     private final IQueryService queryService;
-    private final IAccountService accountService;
 
     @Autowired
-    public QueryController(IQueryService queryService, IAccountService accountService) {
+    public QueryController(IQueryService queryService) {
         this.queryService = queryService;
-        this.accountService = accountService;
     }
 
     /**
@@ -33,15 +30,10 @@ public class QueryController {
      * @return selected query
      */
     @GetMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity getAll(@RequestHeader("authorization-key") String authKey){
-        if(authKey == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Authorization key is missing");
-
-       User user = (User)accountService.getUserByAuthKey(authKey).getResult();
-        if(user == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
-
-        ServiceResult<Iterable<Query>> result = queryService.getAll(user.getId());
+    public ResponseEntity getAll(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) auth.getPrincipal();
+        ServiceResult<Iterable<Query>> result = queryService.getAll(userId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -51,10 +43,7 @@ public class QueryController {
      * @return selected query
      */
     @GetMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity get(@PathVariable String queryId){
-        if(queryId == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Query id is missing");
-
+    public ResponseEntity get(@PathVariable(required = true) String queryId){
         ServiceResult<Query> result = queryService.get(queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
@@ -65,18 +54,10 @@ public class QueryController {
      * @return added query
      */
     @PostMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity add(@RequestBody Filter[] filters, @RequestHeader("authorization-key") String authKey){
-        if(authKey == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Authorization key is missing");
-
-        if(filters == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Filters parameter value is missing");
-
-        User user = (User)accountService.getUserByAuthKey(authKey).getResult();
-        if(user == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
-
-        ServiceResult<Query> result = queryService.add(filters, user.getId());
+    public ResponseEntity add(@RequestBody(required = true) Filter[] filters){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) auth.getPrincipal();
+        ServiceResult<Query> result = queryService.add(filters, userId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -87,12 +68,7 @@ public class QueryController {
      * @return updated query
      */
     @PutMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity update(@RequestBody Filter[] filters, @PathVariable String queryId){
-        if(queryId == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Query id is missing");
-        if(filters == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Filters parameter value is missing");
-
+    public ResponseEntity update(@RequestBody(required = true) Filter[] filters, @PathVariable(required = true) String queryId){
         ServiceResult<Query> result = queryService.update(filters, queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
@@ -103,10 +79,7 @@ public class QueryController {
      * @return http result
      */
     @DeleteMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity delete(@PathVariable String queryId){
-        if(queryId == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Query id is missing");
-
+    public ResponseEntity delete(@PathVariable(required = true) String queryId){
         ServiceResult result = queryService.delete(queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }

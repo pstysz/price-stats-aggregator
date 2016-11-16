@@ -12,6 +12,5 @@ public class HomeController {
     @GetMapping("/help")
     public ModelAndView help() {
         return new ModelAndView("redirect:/swagger-ui.html");
-
     }
 }
