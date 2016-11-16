@@ -50,12 +50,8 @@ public class AccountController {
      * @return Http status
      */
     @PostMapping(value = "logout", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity logout(@RequestBody String authKey){
-        if(authKey != null) {
-            ServiceResult result = accountService.logout(authKey);
-            return ResponseEntity.status(result.getStatus()).body(null);
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    public ResponseEntity logout(@RequestBody(required = true) String authKey){
+        ServiceResult result = accountService.logout(authKey);
+        return ResponseEntity.status(result.getStatus()).body(null);
     }
 }

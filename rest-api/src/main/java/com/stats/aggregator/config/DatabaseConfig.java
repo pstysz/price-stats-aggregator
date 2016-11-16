@@ -17,12 +17,10 @@ public class DatabaseConfig extends AbstractMongoConfiguration {
         return "prize-stats-aggregator";
     }
 
-
     @Override
     public Mongo mongo() throws Exception {
-
-        Mongo mongo = new MongoClient(PropertiesHelper.getProperty("mongoDb.bindIp"), Integer.parseInt(PropertiesHelper.getProperty("mongoDb.port")));
-
+        Mongo mongo = new MongoClient(PropertiesHelper.getProperty("mongoDb.bindIp"),
+                Integer.parseInt(PropertiesHelper.getProperty("mongoDb.port")));
         return mongo;
     }
 }

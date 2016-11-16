@@ -13,11 +13,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     @Bean
-    public Docket api() {
+    public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
+//                .genericModelSubstitutes(ResponseEntity.class)
+                .forCodeGeneration(true)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.stats.aggregator.controllers"))
                 .paths(PathSelectors.any())
                 .build();
+//                .apiInfo(apiInfo());
     }
+
 }
