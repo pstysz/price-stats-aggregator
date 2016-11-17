@@ -34,8 +34,7 @@ public class FilterController {
      * @return Collection of available filters
      */
     @ApiOperation(value = "Gets all available filters on top level of categories",
-            response = Filter.class,
-            responseContainer = "List",
+            response = Filter.class, responseContainer = "List",
             produces = "application/json")
     @GetMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity get(){
@@ -49,8 +48,7 @@ public class FilterController {
      * @return Collection of available filters
      */
     @ApiOperation(value = "Gets all available filters for passed category",
-            response = Filter.class,
-            responseContainer = "List",
+            response = Filter.class, responseContainer = "List",
             produces = "application/json")
     @GetMapping(value = "{categoryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity get(@PathVariable @ApiParam(value = "Id of category to filter by", required = true) String categoryId){

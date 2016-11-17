@@ -33,10 +33,8 @@ public class QueryController {
      * Gets all users queries
      * @return selected query
      */
-    @ApiOperation(value = "Gets all queries for current user",
-            response = Query.class,
-            responseContainer = "List",
-            produces = "application/json")
+    @ApiOperation(value = "Gets all queries for current user", response = Query.class,
+            responseContainer = "List", produces = "application/json")
     @GetMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity getAll(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,8 +49,7 @@ public class QueryController {
      * @return selected query
      */
     @ApiOperation(value = "Gets existing query data",
-            response = Query.class,
-            produces = "application/json")
+            response = Query.class, produces = "application/json")
     @GetMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity get(@PathVariable(required = true)  @ApiParam(value = "query to filter by", required = true) String queryId){
         ServiceResult<Query> result = queryService.get(queryId);
@@ -64,9 +61,8 @@ public class QueryController {
      * @param filters selected filters with their values
      * @return added query
      */
-    @ApiOperation(value = "Adds user's search params (query) to database",
-            response = Query.class,
-            produces = "application/json")
+    @ApiOperation(value = "Adds user's search params (query) to database", response = Query.class,
+            produces = "application/json", consumes = "application/json, text/json")
     @PostMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
     public ResponseEntity add(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -81,10 +77,10 @@ public class QueryController {
      * @param queryId id of query to update
      * @return updated query
      */
-    @ApiOperation(value = "Updates existing query",
-            response = Query.class,
-            produces = "application/json")
-    @PutMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
+    @ApiOperation(value = "Updates existing query", response = Query.class,
+            produces = "application/json", consumes = "application/json, text/json")
+    @PutMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE },
+            consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
     public ResponseEntity update(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters,
                                  @PathVariable(required = true) @ApiParam(value = "id of query to update", required = true) String queryId){
         ServiceResult<Query> result = queryService.update(filters, queryId);
@@ -96,8 +92,7 @@ public class QueryController {
      * @param queryId id of query to remove
      * @return http result
      */
-    @ApiOperation(value = "Removes existing query",
-            produces = "application/json")
+    @ApiOperation(value = "Removes existing query", produces = "application/json")
     @DeleteMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
     public ResponseEntity delete(@PathVariable(required = true) @ApiParam(value = "id of query to remove", required = true) String queryId){
         ServiceResult result = queryService.delete(queryId);

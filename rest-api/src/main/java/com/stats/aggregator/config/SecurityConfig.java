@@ -36,6 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().regexMatchers("^/swagger.*").antMatchers("/api/account/**", "/v2/**");
+        web.ignoring().regexMatchers("^/swagger.*").antMatchers("/api/account/login", "/v2/**", "/api", "/api/help", "/api/api-docs");
     }
 }
