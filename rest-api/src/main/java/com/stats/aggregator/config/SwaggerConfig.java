@@ -15,7 +15,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
-//                .genericModelSubstitutes(ResponseEntity.class)
+                //.genericModelSubstitutes(ResponseEntity.class)
                 .forCodeGeneration(true)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.stats.aggregator.controllers"))
