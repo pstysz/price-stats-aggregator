@@ -6,9 +6,11 @@ import com.stats.aggregator.config.SecurityConfig;
 import com.stats.aggregator.config.SwaggerConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 @SpringBootApplication
+@EnableCaching
 public class RestAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     public static void main(String[] args) throws Exception {

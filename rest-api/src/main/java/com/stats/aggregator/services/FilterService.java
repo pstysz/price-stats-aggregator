@@ -5,6 +5,7 @@ import com.stats.aggregator.services.contracts.ServiceResult;
 import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.repositories.contracts.IFiltersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class FilterService implements IFilterService {
      * @return Collection of available filters
      */
     @Override
+    @Cacheable("allAllegroCategories")
     public ServiceResult<Iterable<Filter>> get() {
         try {
             Iterable<Filter> filters = filtersRepository.findAll();
@@ -43,6 +45,7 @@ public class FilterService implements IFilterService {
      * @return Collection of available filters
      */
     @Override
+    @Cacheable(value = "oneAllegroCategory", key = "id")
     public ServiceResult<Iterable<Filter>> get(String id) {
         return null;
     }
