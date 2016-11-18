@@ -18,7 +18,7 @@ public class RestAppInit extends AbstractAnnotationConfigDispatcherServletInitia
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{
-                DatabaseConfig.class
+                 DatabaseConfig.class
                 ,RepositoryConfig.class
                 ,SecurityConfig.class
         };

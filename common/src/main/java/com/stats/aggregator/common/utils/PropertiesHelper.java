@@ -1,6 +1,5 @@
 package com.stats.aggregator.common.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -10,25 +9,15 @@ import java.util.Properties;
  */
 public final class PropertiesHelper {
 
-    private static Properties prop;
+    private static Properties prop = new Properties();
 
     static {
-        prop = new Properties();
-        InputStream input = null;
 
         try {
-            initializer(prop, input);
+            initializer(prop);
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
         }
     }
 
@@ -51,36 +40,14 @@ public final class PropertiesHelper {
         return prop.getProperty(name, defaultValue);
     }
 
+    private static void initializer(Properties prop) throws  IOException{
 
+        String[] resources = {"db", "sensitive", "webapi"};
 
-    private static void initializer(Properties prop, InputStream input) throws  IOException{
-
-        String resourcesLocation = "\\src\\main\\resources";
-
-        File[] globalFolderContent = new File(".").listFiles();
-        if(globalFolderContent == null)
-            return;
-
-        for(File dir : globalFolderContent){
-            if(dir == null || !dir.isDirectory())
-                continue;
-
-            File folder = new File(dir.getName() + resourcesLocation);
-            File[] listOfFiles = folder.listFiles();
-
-            if(listOfFiles == null)
-                continue;
-
-            for (File file : listOfFiles) {
-                if (file.isFile()) {
-                    input = PropertiesHelper.class.getClassLoader().getResourceAsStream(file.getName());
-                    if (input == null) {
-                        continue;
-                    }
-
-                    prop.load(input);
-                }
-            }
+        for(String res : resources){
+            InputStream loadedProp = PropertiesHelper.class.getClassLoader().getResourceAsStream(res.concat(".properties"));
+            prop.load(loadedProp);
+            loadedProp.close();
         }
     }
 }

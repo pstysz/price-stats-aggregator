@@ -12,10 +12,10 @@ rest-api/mvnw
 rest-api/.mvn/
 hadoop/.mvn/
 rest-api/src/main/resources/sensitive.properties
-data-objects/target/
-rest-api/target/
-hadoop/target/
-common/target/
+data-objects/target/*
+rest-api/target/*
+hadoop/target/*
+common/target/*
 
 *.class
 
@@ -32,3 +32,4 @@ common/target/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+target/
