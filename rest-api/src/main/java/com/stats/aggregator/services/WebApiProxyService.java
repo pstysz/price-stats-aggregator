@@ -68,5 +68,4 @@ public class WebApiProxyService implements IWebApiProxyService {
             return new ServiceResult<>(e, HttpStatus.BAD_REQUEST);
         }
     }
-
 }

@@ -45,7 +45,7 @@ public class FilterService implements IFilterService {
      * @return Collection of available filters
      */
     @Override
-    @Cacheable(value = "oneAllegroCategory", key = "id")
+    @Cacheable(value = "oneAllegroCategory", key = "#id")
     public ServiceResult<Iterable<Filter>> get(String id) {
         return null;
     }

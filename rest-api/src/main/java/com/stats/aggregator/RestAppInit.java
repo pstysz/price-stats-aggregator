@@ -1,9 +1,6 @@
 package com.stats.aggregator;
 
-import com.stats.aggregator.config.DatabaseConfig;
-import com.stats.aggregator.config.RepositoryConfig;
-import com.stats.aggregator.config.SecurityConfig;
-import com.stats.aggregator.config.SwaggerConfig;
+import com.stats.aggregator.config.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -15,6 +12,8 @@ public class RestAppInit extends AbstractAnnotationConfigDispatcherServletInitia
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(RestAppInit.class, args);
+
+        DatabaseInit.run();
     }
 
     @Override
