@@ -40,6 +40,7 @@ public class CategoriesList {
     }
 
     public CategoriesList(DoGetCatsDataResponse clientItemsObj){
+        this();
         this.versionKey = clientItemsObj.getVerKey();
         this.versionStructure = clientItemsObj.getVerStr();
 

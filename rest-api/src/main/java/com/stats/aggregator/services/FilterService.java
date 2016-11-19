@@ -27,7 +27,7 @@ public class FilterService implements IFilterService {
      * @return Collection of available filters
      */
     @Override
-    @Cacheable("allAllegroCategories")
+    @Cacheable("allAllegroFilters")
     public ServiceResult<Iterable<Filter>> get() {
         try {
             Iterable<Filter> filters = filtersRepository.findAll();
@@ -45,7 +45,7 @@ public class FilterService implements IFilterService {
      * @return Collection of available filters
      */
     @Override
-    @Cacheable(value = "oneAllegroCategory", key = "#id")
+    @Cacheable(value = "oneAllegroFilter", key = "#id")
     public ServiceResult<Iterable<Filter>> get(String id) {
         return null;
     }
