@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 @SpringBootApplication
-public class HadoopAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class SchedulerAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(HadoopAppInit.class, args);
+        SpringApplication.run(SchedulerAppInit.class, args);
     }
 
     @Override
