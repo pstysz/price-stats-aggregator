@@ -7,7 +7,7 @@ import java.util.List;
 @Document
 public class Query {
     private String id;
-    private List<Filter> filters;
+    private List<FilterDefinition> filters;
 
     public String getId() {
         return id;
@@ -17,11 +17,11 @@ public class Query {
         this.id = id;
     }
 
-    public List<Filter> getFilters() {
+    public List<FilterDefinition> getFilters() {
         return filters;
     }
 
-    public void setFilters(List<Filter> filters) {
+    public void setFilters(List<FilterDefinition> filters) {
         this.filters = filters;
     }
 }

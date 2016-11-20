@@ -1,6 +1,7 @@
 package com.stats.aggregator.security;
 
 import com.stats.aggregator.DTOs.User;
+import com.stats.aggregator.common.enums.ErrorMsg;
 import com.stats.aggregator.repositories.contracts.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -25,7 +26,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         CustomAuthenticationToken customAuthentication = (CustomAuthenticationToken) authentication;
 
         if(customAuthentication.getAuthKey() == null){
-            throw new AuthenticationCredentialsNotFoundException("authorization key is null");
+            throw new AuthenticationCredentialsNotFoundException(ErrorMsg.EMPTY_AUTH_KEY.toString());
         }
 
         // performance killer, but it's just a demo app

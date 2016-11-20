@@ -3,12 +3,14 @@ package com.stats.aggregator.services;
 import com.stats.aggregator.DTOs.AuctionsList;
 import com.stats.aggregator.DTOs.CategoriesList;
 import com.stats.aggregator.DTOs.Filter;
+import com.stats.aggregator.DTOs.FilterDefinition;
 import com.stats.aggregator.allegroobj.containers.FilterOptionsType;
 import com.stats.aggregator.allegroobj.containers.FiltersListType;
 import com.stats.aggregator.allegroobj.contracts.DoGetCatsDataRequest;
 import com.stats.aggregator.allegroobj.contracts.DoGetCatsDataResponse;
 import com.stats.aggregator.allegroobj.contracts.DoGetItemsListRequest;
 import com.stats.aggregator.allegroobj.contracts.DoGetItemsListResponse;
+import com.stats.aggregator.common.enums.ErrorMsg;
 import com.stats.aggregator.common.utils.PropertiesHelper;
 import com.stats.aggregator.repositories.allegroApiClient.WebApiServicePort;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
@@ -33,22 +35,32 @@ public class WebApiProxyService implements IWebApiProxyService {
         this.allegroClient = webApiServicePort;
     }
 
+    /**
+     * Gets filtered auctions, base on passed filter (for query test purposes)
+     * @param filters selected filters with their values
+     * @return filtered auctions
+     */
     @Override
-    public ServiceResult<AuctionsList> getAuctions() {
+    public ServiceResult<AuctionsList> getAuctions(Filter[] filters){
 
         try {
-            FilterOptionsType fotcat = new FilterOptionsType();
-            fotcat.setFilterId("category");
-            String[] categories = new String[]{"4029"};
-            fotcat.setFilterValueId(categories);
-            FilterOptionsType[] filter = new FilterOptionsType[]{fotcat};
+            if(filters == null){
+                return new ServiceResult<>(HttpStatus.BAD_REQUEST,
+                        String.format(ErrorMsg.INVALID_PARAMETER.toString(), "filters"));
+            }
+
+            FilterOptionsType[] arrayOfFilters = new FilterOptionsType[filters.length];
+            int i = 0;
+            for(Filter filter : filters){
+                arrayOfFilters[i++] = filter.toFilterOptionsType();
+            }
 
             DoGetItemsListRequest request = new DoGetItemsListRequest(
-                    filter,
-                    null,
-                    null,
-                    null,
-                    null
+                    arrayOfFilters, //filters
+                    null, //sorting
+                    null, //resultSize
+                    null, //resultOffset
+                    null //resultScope
             );
 
             DoGetItemsListResponse response = allegroClient.doGetItemsList(request);
@@ -63,6 +75,10 @@ public class WebApiProxyService implements IWebApiProxyService {
 
     }
 
+    /**
+     * Gets all available categories
+     * @return Collection of available categories
+     */
     @Override
     @Cacheable("getCategoriesTree")
     public ServiceResult<CategoriesList> getCategoriesTree() {
@@ -82,8 +98,8 @@ public class WebApiProxyService implements IWebApiProxyService {
      * @return List of filters
      */
     @Override
-    @Cacheable(value = "getAvailableFilters", key = "#categoryId")
-    public ServiceResult<List<Filter>> getAvailableFilters(String categoryId) {
+    @Cacheable(value = "getAvailableFilterDefinitions", key = "#categoryId")
+    public ServiceResult<List<FilterDefinition>> getAvailableFilters(String categoryId) {
         try {
             if(categoryId.equals(""))
                 categoryId = PropertiesHelper.getProperty("webapi.categoryId.cars");
@@ -94,19 +110,19 @@ public class WebApiProxyService implements IWebApiProxyService {
             fotcat.setFilterValueId(categories);
             FilterOptionsType[] filter = new FilterOptionsType[]{fotcat};
             DoGetItemsListRequest request = new DoGetItemsListRequest(
-                    filter,
-                    null,
-                    null,
-                    null,
-                    null
+                    filter,//filters
+                    null, //sorting
+                    null, //resultSize
+                    null, //resultOffset
+                    null //resultScope
             );
             DoGetItemsListResponse response = allegroClient.doGetItemsList(request);
 
             if(response.getFiltersList() != null){
-                List<Filter> model = new ArrayList<>();
+                List<FilterDefinition> model = new ArrayList<>();
 
                 for(FiltersListType filtersListType : response.getFiltersList()){
-                    model.add(new Filter(filtersListType));
+                    model.add(new FilterDefinition(filtersListType));
                 }
 
                 return new ServiceResult<>(model);

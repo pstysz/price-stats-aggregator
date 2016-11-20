@@ -1,7 +1,7 @@
 package com.stats.aggregator.DTOs;
 
 import com.stats.aggregator.allegroobj.containers.PhotoInfoType;
-import com.stats.aggregator.enums.PhotoSize;
+import com.stats.aggregator.DTOs.enums.PhotoSize;
 
 public class Photo {
     private PhotoSize size;

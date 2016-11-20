@@ -2,6 +2,7 @@ package com.stats.aggregator.config;
 
 import com.stats.aggregator.DTOs.AuthorizationKey;
 import com.stats.aggregator.DTOs.User;
+import com.stats.aggregator.common.utils.PropertiesHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -39,16 +40,16 @@ public final class DatabaseInit {
 
         if (!mongoTemplate.exists(Query.query(Criteria.where("id").is("n092f349f23904")), AuthorizationKey.class)) {
             AuthorizationKey swaggerAuthKey = new AuthorizationKey("n092f349f23904");
-            User swaggerUser = new User("swagger", "swaggerpass");
+            User swaggerUser = new User(PropertiesHelper.getProperty("db.swagger.name"), PropertiesHelper.getProperty("db.swagger.pass"));
             swaggerUser.getAuthorizationKeys().add(swaggerAuthKey);
             mongoTemplate.save(swaggerUser);
             swaggerAuthKey.setUser(swaggerUser);
             mongoTemplate.save(swaggerAuthKey);
         }
 
-        if (!mongoTemplate.exists(Query.query(Criteria.where("id").is("324f23f32fa3")), AuthorizationKey.class)) {
+        if (!mongoTemplate.exists(Query.query(Criteria.where("id").is("f03n0i4ufn304un")), AuthorizationKey.class)) {
             AuthorizationKey testAuthKey = new AuthorizationKey("f03n0i4ufn304un");
-            User testUser = new User("test", "test");
+            User testUser = new User(PropertiesHelper.getProperty("db.testuser.name"), PropertiesHelper.getProperty("db.testuser.pass"));
             testUser.getAuthorizationKeys().add(testAuthKey);
             mongoTemplate.save(testUser);
             testAuthKey.setUser(testUser);

@@ -1,6 +1,6 @@
 package com.stats.aggregator.services.contracts;
 
-import com.stats.aggregator.DTOs.Filter;
+import com.stats.aggregator.DTOs.FilterDefinition;
 import com.stats.aggregator.DTOs.Query;
 
 /**
@@ -28,7 +28,7 @@ public interface IQueryService {
      * @param userId id of query owner
      * @return stored query
      */
-    ServiceResult<Query> add(Filter[] filters, String userId);
+    ServiceResult<Query> add(FilterDefinition[] filters, String userId);
 
     /**
      * Adds user's search params (query) to database
@@ -36,7 +36,7 @@ public interface IQueryService {
      * @param userId id of query owner
      * @return stored query id
      */
-    ServiceResult<Query> update(Filter[] filters, String userId);
+    ServiceResult<Query> update(FilterDefinition[] filters, String userId);
 
     /**
      * Removes selected query

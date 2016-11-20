@@ -1,7 +1,7 @@
 package com.stats.aggregator.DTOs;
 
 import com.stats.aggregator.allegroobj.containers.PriceInfoType;
-import com.stats.aggregator.enums.PriceType;
+import com.stats.aggregator.DTOs.enums.PriceType;
 
 public class Price {
     private PriceType type;

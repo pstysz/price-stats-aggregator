@@ -15,7 +15,7 @@ public class AuctionsList {
     private List<AuctionItem> auctionItems;
     private List<Category> categoriesTree;
     private List<Category> categoriesPath;
-    private List<Filter> availableFilters;
+    private List<FilterDefinition> availableFilterDefinitions;
     private String[] rejectedFilters;
 
     public int getTotalAuctionItemsCount() {
@@ -58,12 +58,12 @@ public class AuctionsList {
         this.categoriesPath = categoriesPath;
     }
 
-    public List<Filter> getAvailableFilters() {
-        return availableFilters;
+    public List<FilterDefinition> getAvailableFilterDefinitions() {
+        return availableFilterDefinitions;
     }
 
-    public void setAvailableFilters(List<Filter> availableFilters) {
-        this.availableFilters = availableFilters;
+    public void setAvailableFilterDefinitions(List<FilterDefinition> availableFilterDefinitions) {
+        this.availableFilterDefinitions = availableFilterDefinitions;
     }
 
     public String[] getRejectedFilters() {
@@ -78,7 +78,7 @@ public class AuctionsList {
         this.auctionItems = new ArrayList<>();
         this.categoriesTree = new ArrayList<>();
         this.categoriesPath = new ArrayList<>();
-        this.availableFilters = new ArrayList<>();
+        this.availableFilterDefinitions = new ArrayList<>();
         this.rejectedFilters = new String[]{};
     }
 
@@ -114,7 +114,7 @@ public class AuctionsList {
 
         if(clientItemsObj.getFiltersList() != null){
             for(FiltersListType listItem : clientItemsObj.getFiltersList()){
-                availableFilters.add(new Filter(listItem));
+                availableFilterDefinitions.add(new FilterDefinition(listItem));
             }
         }
     }

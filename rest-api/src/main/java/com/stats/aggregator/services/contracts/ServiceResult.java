@@ -27,12 +27,21 @@ public class ServiceResult<TResult> {
         this.setResult(result);
     }
 
-    public ServiceResult(Exception exception, HttpStatus status){
+    public ServiceResult(HttpStatus status){
         this();
-        this.setException(exception);
-        this.setSuccess(false);
         this.setStatus(status);
+        this.setSuccess(false);
+    }
+
+    public ServiceResult(Exception exception, HttpStatus status){
+        this(status);
+        this.setException(exception);
         getErrorDescriptions().add(exception.getMessage());
+        if(exception.getStackTrace() != null) {
+            for (StackTraceElement element : exception.getStackTrace()) {
+                getErrorDescriptions().add(element.toString());
+            }
+        }
     }
 
     public ServiceResult(HttpStatus status, boolean  isSuccess){
@@ -41,10 +50,9 @@ public class ServiceResult<TResult> {
         this.setSuccess(isSuccess);
     }
 
-    public ServiceResult(HttpStatus status){
-        this();
-        this.setStatus(status);
-        this.setSuccess(false);
+    public ServiceResult(HttpStatus status, String message){
+        this(status);
+        this.errorDescriptions.add(message);
     }
 
     public TResult getResult() {

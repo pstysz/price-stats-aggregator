@@ -1,12 +1,13 @@
-package com.stats.aggregator.enums;
+package com.stats.aggregator.DTOs.enums;
 
 import static com.stats.aggregator.common.utils.EnumHelper.getEnumFromString;
 
 public enum PriceType {
     UNKNOWN(0),
-    BUY_NOW(1),
+    BUYNOW(1),
     BIDDING(2),
-    WITH_DELIVERY(3);
+    WITHDELIVERY(3),
+    ADVERT(4);
 
     private final int id;
     PriceType(int id) { this.id = id; }

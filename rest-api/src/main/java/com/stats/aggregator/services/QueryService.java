@@ -1,8 +1,8 @@
 package com.stats.aggregator.services;
 
+import com.stats.aggregator.DTOs.FilterDefinition;
 import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.DTOs.Query;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class QueryService implements IQueryService {
      * @return stored query
      */
     @Override
-    public ServiceResult<Query> add(Filter[] filters, String userId) {
+    public ServiceResult<Query> add(FilterDefinition[] filters, String userId) {
         return null;
     }
 
@@ -50,7 +50,7 @@ public class QueryService implements IQueryService {
      * @return stored query id
      */
     @Override
-    public ServiceResult<Query> update(Filter[] filters, String userId) {
+    public ServiceResult<Query> update(FilterDefinition[] filters, String userId) {
         return null;
     }
 

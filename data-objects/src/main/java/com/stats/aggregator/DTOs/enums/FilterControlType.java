@@ -1,4 +1,4 @@
-package com.stats.aggregator.enums;
+package com.stats.aggregator.DTOs.enums;
 
 import com.stats.aggregator.common.utils.EnumHelper;
 

@@ -1,6 +1,6 @@
 package com.stats.aggregator.controllers;
 
-import com.stats.aggregator.DTOs.Filter;
+import com.stats.aggregator.DTOs.FilterDefinition;
 import com.stats.aggregator.DTOs.Query;
 import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.services.contracts.ServiceResult;
@@ -64,7 +64,7 @@ public class QueryController {
     @ApiOperation(value = "Adds user's search params (query) to database", response = Query.class,
             produces = "application/json", consumes = "application/json, text/json")
     @PostMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity add(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters){
+    public ResponseEntity add(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) FilterDefinition[] filters){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
         ServiceResult<Query> result = queryService.add(filters, userId);
@@ -81,7 +81,7 @@ public class QueryController {
             produces = "application/json", consumes = "application/json, text/json")
     @PutMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity update(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters,
+    public ResponseEntity update(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) FilterDefinition[] filters,
                                  @PathVariable(required = true) @ApiParam(value = "id of query to update", required = true) String queryId){
         ServiceResult<Query> result = queryService.update(filters, queryId);
         return ResponseEntity.status(result.getStatus()).body(result);

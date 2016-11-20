@@ -1,8 +1,8 @@
 package com.stats.aggregator.services;
 
+import com.stats.aggregator.DTOs.FilterDefinition;
 import com.stats.aggregator.services.contracts.IFilterService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.repositories.contracts.IFiltersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,9 +28,9 @@ public class FilterService implements IFilterService {
      */
     @Override
     @Cacheable("allAllegroFilters")
-    public ServiceResult<Iterable<Filter>> get() {
+    public ServiceResult<Iterable<FilterDefinition>> get() {
         try {
-            Iterable<Filter> filters = filtersRepository.findAll();
+            Iterable<FilterDefinition> filters = filtersRepository.findAll();
             return new ServiceResult<>(filters);
         }
         catch (Exception e){
@@ -46,7 +46,7 @@ public class FilterService implements IFilterService {
      */
     @Override
     @Cacheable(value = "oneAllegroFilter", key = "#id")
-    public ServiceResult<Iterable<Filter>> get(String id) {
+    public ServiceResult<Iterable<FilterDefinition>> get(String id) {
         return null;
     }
 }

@@ -1,6 +1,7 @@
 
 package com.stats.aggregator.security;
 
+import com.stats.aggregator.common.enums.ErrorMsg;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,7 +21,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         String xAuth = request.getHeader("x-authorization-key");
 
         if(xAuth == null){
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "authorization key is empty");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, ErrorMsg.EMPTY_AUTH_KEY.toString());
             return;
         }
 
