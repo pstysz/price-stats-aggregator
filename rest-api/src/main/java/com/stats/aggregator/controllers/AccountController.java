@@ -43,7 +43,7 @@ public class AccountController {
             produces = "application/json", consumes = "application/json, text/json")
     @PostMapping(value = "login", produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity login(@RequestBody @ApiParam(value = "json with login + password", required = true) Map<String, String> loginData){
+    public ResponseEntity login(@RequestBody @ApiParam(value = "json with userName + password", required = true) Map<String, String> loginData){
         if(loginData != null) {
             String userName = loginData.get("userName");
             String password = loginData.get("password");
