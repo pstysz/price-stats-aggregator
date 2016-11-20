@@ -3,13 +3,10 @@ package com.stats.aggregator.DTOs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.stats.aggregator.allegroobj.containers.FilterOptionsType;
 import com.stats.aggregator.allegroobj.containers.RangeValueType;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+
 public class Filter
 {
-    @Id
     private String id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String[] values;

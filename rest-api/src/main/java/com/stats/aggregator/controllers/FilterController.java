@@ -4,7 +4,6 @@ import com.stats.aggregator.DTOs.AuctionsList;
 import com.stats.aggregator.DTOs.CategoriesList;
 import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.DTOs.FilterDefinition;
-import com.stats.aggregator.services.contracts.IFilterService;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
 import io.swagger.annotations.Api;
@@ -25,12 +24,10 @@ import java.util.List;
 @Api(description = "Handle actions on allegro categories/filters")
 public class FilterController {
 
-    private final IFilterService filterService;
     private final IWebApiProxyService webApiProxyService;
 
     @Autowired
-    public FilterController(IFilterService filterService, IWebApiProxyService webApiProxyService) {
-        this.filterService = filterService;
+    public FilterController(IWebApiProxyService webApiProxyService) {
         this.webApiProxyService = webApiProxyService;
     }
 

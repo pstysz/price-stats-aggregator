@@ -1,7 +1,7 @@
 package com.stats.aggregator.controllers;
 
-import com.stats.aggregator.DTOs.FilterDefinition;
-import com.stats.aggregator.DTOs.Query;
+import com.stats.aggregator.DTOs.Filter;
+import com.stats.aggregator.DTOs.FilterQuery;
 import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.services.contracts.ServiceResult;
 import io.swagger.annotations.Api;
@@ -33,13 +33,13 @@ public class QueryController {
      * Gets all users queries
      * @return selected query
      */
-    @ApiOperation(value = "Gets all queries for current user", response = Query.class,
+    @ApiOperation(value = "Gets all queries for current user", response = FilterQuery.class,
             responseContainer = "List", produces = "application/json")
     @GetMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity getAll(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
-        ServiceResult<Iterable<Query>> result = queryService.getAll(userId);
+        ServiceResult<Iterable<FilterQuery>> result = queryService.getAll(userId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -49,10 +49,10 @@ public class QueryController {
      * @return selected query
      */
     @ApiOperation(value = "Gets existing query data",
-            response = Query.class, produces = "application/json")
+            response = FilterQuery.class, produces = "application/json")
     @GetMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity get(@PathVariable(required = true)  @ApiParam(value = "query to filter by", required = true) String queryId){
-        ServiceResult<Query> result = queryService.get(queryId);
+        ServiceResult<FilterQuery> result = queryService.get(queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -61,13 +61,13 @@ public class QueryController {
      * @param filters selected filters with their values
      * @return added query
      */
-    @ApiOperation(value = "Adds user's search params (query) to database", response = Query.class,
+    @ApiOperation(value = "Adds user's search params (query) to database", response = FilterQuery.class,
             produces = "application/json", consumes = "application/json, text/json")
     @PostMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity add(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) FilterDefinition[] filters){
+    public ResponseEntity add(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
-        ServiceResult<Query> result = queryService.add(filters, userId);
+        ServiceResult<FilterQuery> result = queryService.add(filters, userId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -77,13 +77,13 @@ public class QueryController {
      * @param queryId id of query to update
      * @return updated query
      */
-    @ApiOperation(value = "Updates existing query", response = Query.class,
+    @ApiOperation(value = "Updates existing query", response = FilterQuery.class,
             produces = "application/json", consumes = "application/json, text/json")
     @PutMapping(value = "{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
-    public ResponseEntity update(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) FilterDefinition[] filters,
+    public ResponseEntity update(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters,
                                  @PathVariable(required = true) @ApiParam(value = "id of query to update", required = true) String queryId){
-        ServiceResult<Query> result = queryService.update(filters, queryId);
+        ServiceResult<FilterQuery> result = queryService.update(filters, queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 

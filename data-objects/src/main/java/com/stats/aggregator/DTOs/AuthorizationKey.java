@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Authorization keys for user devices
  */
-@Document(collection = "authorization_key")
+@Document(collection = "authorization_keys")
 public class AuthorizationKey {
     @Id
     private String id;
