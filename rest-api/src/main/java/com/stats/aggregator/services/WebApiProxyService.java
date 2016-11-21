@@ -15,8 +15,10 @@ import com.stats.aggregator.common.utils.PropertiesHelper;
 import com.stats.aggregator.repositories.allegroApiClient.WebApiServicePort;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ import java.util.List;
 public class WebApiProxyService implements IWebApiProxyService {
 
     private final WebApiServicePort allegroClient;
+    private Logger logger = Logger.getLogger(WebApiProxyService.class);
 
     @Autowired
     public WebApiProxyService(WebApiServicePort webApiServicePort) throws ServiceException {
@@ -68,9 +71,16 @@ public class WebApiProxyService implements IWebApiProxyService {
             AuctionsList model = new AuctionsList(response);
             return new ServiceResult<>(model);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ServiceResult<>(e, HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (java.rmi.RemoteException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -86,9 +96,16 @@ public class WebApiProxyService implements IWebApiProxyService {
             DoGetCatsDataResponse response = allegroClient.doGetCatsData(new DoGetCatsDataRequest());
             CategoriesList model = new CategoriesList(response);
             return new ServiceResult<>(model);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ServiceResult<>(e, HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (java.rmi.RemoteException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -129,9 +146,16 @@ public class WebApiProxyService implements IWebApiProxyService {
             }
 
             return new ServiceResult<>(new ArrayList<>());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ServiceResult<>(e, HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (java.rmi.RemoteException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

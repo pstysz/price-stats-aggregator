@@ -1,15 +1,18 @@
 package com.stats.aggregator.services;
 
-import com.stats.aggregator.services.contracts.IAccountService;
-import com.stats.aggregator.services.contracts.ServiceResult;
-import com.stats.aggregator.common.utils.HashCodeHelper;
 import com.stats.aggregator.DTOs.AuthorizationKey;
 import com.stats.aggregator.DTOs.User;
+import com.stats.aggregator.common.utils.HashCodeHelper;
 import com.stats.aggregator.repositories.contracts.IAuthorizationKeyRepository;
 import com.stats.aggregator.repositories.contracts.IUserRepository;
+import com.stats.aggregator.services.contracts.IAccountService;
+import com.stats.aggregator.services.contracts.ServiceResult;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 
 
 /**
@@ -20,6 +23,7 @@ public class AccountService implements IAccountService {
 
     private final IUserRepository userRepository;
     private final IAuthorizationKeyRepository authorizationKeyRepository;
+    private Logger logger = Logger.getLogger(AccountService.class);
 
     @Autowired
     public AccountService(IUserRepository userRepository, IAuthorizationKeyRepository authorizationKeyRepository) {
@@ -47,7 +51,10 @@ public class AccountService implements IAccountService {
 
             return new ServiceResult<>(authKey);
         }
-        catch (Exception e){
+        catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
             return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -66,7 +73,10 @@ public class AccountService implements IAccountService {
             authorizationKeyRepository.delete(authKey); //ToDo: check why it doesn't work
             return new ServiceResult();
         }
-        catch (Exception e){
+        catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
             return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -88,7 +98,10 @@ public class AccountService implements IAccountService {
 
             return new ServiceResult<>(user);
         }
-        catch (Exception e){
+        catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
             return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -4,9 +4,14 @@ import com.stats.aggregator.DTOs.AuthorizationKey;
 import com.stats.aggregator.DTOs.User;
 import com.stats.aggregator.repositories.contracts.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.*;
-import org.springframework.data.mongodb.core.query.*;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
 import java.util.Date;
 
 /**
@@ -32,7 +37,7 @@ public class UserRepository implements IUserRepository {
      * @return user who registered this device
      */
     @Override
-    public User findByDeviceAuthKey(String deviceAuthKey) {
+    public User findByDeviceAuthKey(String deviceAuthKey) throws DataAccessException {
         AuthorizationKey storedKey = mongoTemplate.findAndModify(
                 Query.query(Criteria.where("id").is(deviceAuthKey)),
                 (new Update()).set("touchDate", new Date()),
@@ -49,7 +54,7 @@ public class UserRepository implements IUserRepository {
      * @return user document
      */
     @Override
-    public User findOrCreate(String userId) {
+    public User findOrCreate(String userId) throws DataAccessException {
         User user = mongoTemplate.findAndModify(
                 Query.query(Criteria.where("id").is(userId)),
                 (new Update()).setOnInsert("id", userId),
@@ -65,7 +70,7 @@ public class UserRepository implements IUserRepository {
      * @return modified document
      */
     @Override
-    public User updateOrInsert(User user){
+    public User updateOrInsert(User user) throws DataAccessException {
         mongoTemplate.save(user);
         return user;
     }

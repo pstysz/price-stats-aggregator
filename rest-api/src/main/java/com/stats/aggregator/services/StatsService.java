@@ -2,12 +2,15 @@ package com.stats.aggregator.services;
 
 import com.stats.aggregator.services.contracts.IStatsService;
 import com.stats.aggregator.services.contracts.ServiceResult;
+import org.apache.log4j.Logger;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatsService implements IStatsService {
 
-
+    private Logger logger = Logger.getLogger(StatsService.class);
     /**
      * Gets latest minimal value of filter in selected query
      *
@@ -29,7 +32,14 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Iterable<Double>> getMin(String queryId, Long from, Long to) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -40,7 +50,14 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Double> getMax(String queryId) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -53,7 +70,14 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Iterable<Double>> getMax(String queryId, Long from, Long to) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -64,7 +88,14 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Double> getAvg(String queryId) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -77,7 +108,14 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Iterable<Double>> getAvg(String queryId, Long from, Long to) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -88,7 +126,14 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Double> getMedian(String queryId) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -101,6 +146,13 @@ public class StatsService implements IStatsService {
      */
     @Override
     public ServiceResult<Iterable<Double>> getMedian(String queryId, Long from, Long to) {
-        return null;
+        try {
+            return null;
+        } catch (DataAccessException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
