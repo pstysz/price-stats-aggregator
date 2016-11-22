@@ -2,7 +2,8 @@ package com.stats.aggregator.services;
 
 import com.stats.aggregator.services.contracts.IStatsService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StatsService implements IStatsService {
 
-    private Logger logger = Logger.getLogger(StatsService.class);
+    private Logger logger = LogManager.getLogger(StatsService.class);
     /**
      * Gets latest minimal value of filter in selected query
      *

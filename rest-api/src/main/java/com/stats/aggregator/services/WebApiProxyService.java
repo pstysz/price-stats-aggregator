@@ -15,23 +15,27 @@ import com.stats.aggregator.common.utils.PropertiesHelper;
 import com.stats.aggregator.repositories.allegroApiClient.WebApiServicePort;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import javax.xml.rpc.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 
 @Service
 public class WebApiProxyService implements IWebApiProxyService {
 
     private final WebApiServicePort allegroClient;
-    private Logger logger = Logger.getLogger(WebApiProxyService.class);
+    private Logger logger = LogManager.getLogger(WebApiProxyService.class);
 
     @Autowired
     public WebApiProxyService(WebApiServicePort webApiServicePort) throws ServiceException {
@@ -44,12 +48,13 @@ public class WebApiProxyService implements IWebApiProxyService {
      * @return filtered auctions
      */
     @Override
-    public ServiceResult<AuctionsList> getAuctions(Filter[] filters){
-
+    @Async
+    public Future<ServiceResult<AuctionsList>> getAuctions(Filter[] filters){
+        logger.info("Start getAuctions()");
         try {
             if(filters == null){
-                return new ServiceResult<>(HttpStatus.BAD_REQUEST,
-                        String.format(ErrorMsg.INVALID_PARAMETER.toString(), "filters"));
+                return new AsyncResult<>(new ServiceResult<>(HttpStatus.BAD_REQUEST,
+                        String.format(ErrorMsg.INVALID_PARAMETER.toString(), "filters")));
             }
 
             FilterOptionsType[] arrayOfFilters = new FilterOptionsType[filters.length];
@@ -69,18 +74,19 @@ public class WebApiProxyService implements IWebApiProxyService {
             DoGetItemsListResponse response = allegroClient.doGetItemsList(request);
 
             AuctionsList model = new AuctionsList(response);
-            return new ServiceResult<>(model);
+            logger.info("Stop getAuctions()");
+            return new AsyncResult<>(new ServiceResult<>(model));
 
         } catch (DataAccessException e){
             if(logger.isWarnEnabled()){
                 logger.warn(e);
             }
-            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new AsyncResult<>(new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR));
         } catch (java.rmi.RemoteException e){
             if(logger.isWarnEnabled()){
                 logger.warn(e);
             }
-            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new AsyncResult<>(new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR));
         }
 
     }

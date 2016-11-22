@@ -9,12 +9,15 @@ import com.stats.aggregator.services.contracts.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Handle actions on allegro categories/filters
@@ -25,6 +28,7 @@ import java.util.List;
 public class FilterController {
 
     private final IWebApiProxyService webApiProxyService;
+    private final Logger logger = LogManager.getLogger(FilterController.class);
 
     @Autowired
     public FilterController(IWebApiProxyService webApiProxyService) {
@@ -81,7 +85,21 @@ public class FilterController {
             produces = "application/json", consumes = "application/json, text/json")
     @PostMapping(value = "", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE, "text/json" })
     public ResponseEntity filter(@RequestBody(required = true) @ApiParam(value = "selected filters with their values", required = true) Filter[] filters){
-        ServiceResult<AuctionsList> result = webApiProxyService.getAuctions(filters);
-        return ResponseEntity.status(result.getStatus()).body(result);
+
+        try{
+            logger.info("Start controller get()");
+            ServiceResult<AuctionsList> result = webApiProxyService.getAuctions(filters).get();
+            logger.info("Stop controller get()");
+            return ResponseEntity.status(result.getStatus()).body(result);
+
+        } catch (ExecutionException e){
+
+        }
+        catch (InterruptedException e){
+
+        }
+
+        return null;
+
     }
 }

@@ -4,7 +4,9 @@ import com.stats.aggregator.DTOs.AuctionsList;
 import com.stats.aggregator.DTOs.CategoriesList;
 import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.DTOs.FilterDefinition;
+
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Proxy service to call Allegro WebApi client
@@ -15,7 +17,7 @@ public interface IWebApiProxyService {
      * @param filters selected filters with their values
      * @return filtered auctions
      */
-    ServiceResult<AuctionsList> getAuctions(Filter[] filters);
+    Future<ServiceResult<AuctionsList>> getAuctions(Filter[] filters);
 
     /**
      * Gets all available categories

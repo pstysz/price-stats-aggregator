@@ -6,7 +6,8 @@ import com.stats.aggregator.repositories.contracts.ICounterRepository;
 import com.stats.aggregator.repositories.contracts.IQueryRepository;
 import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class QueryService implements IQueryService {
 
     private final IQueryRepository queryRepository;
     private final ICounterRepository counterRepository;
-    private Logger logger = Logger.getLogger(QueryService.class);
+    private Logger logger = LogManager.getLogger(QueryService.class);
 
     @Autowired
     public QueryService(ICounterRepository counterRepository, IQueryRepository queryRepository) {

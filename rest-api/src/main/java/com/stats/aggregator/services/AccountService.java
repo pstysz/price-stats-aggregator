@@ -7,7 +7,8 @@ import com.stats.aggregator.repositories.contracts.IAuthorizationKeyRepository;
 import com.stats.aggregator.repositories.contracts.IUserRepository;
 import com.stats.aggregator.services.contracts.IAccountService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class AccountService implements IAccountService {
 
     private final IUserRepository userRepository;
     private final IAuthorizationKeyRepository authorizationKeyRepository;
-    private Logger logger = Logger.getLogger(AccountService.class);
+    private Logger logger = LogManager.getLogger(AccountService.class);
 
     @Autowired
     public AccountService(IUserRepository userRepository, IAuthorizationKeyRepository authorizationKeyRepository) {

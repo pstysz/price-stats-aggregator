@@ -52,7 +52,7 @@ public class ServiceResult<TResult> {
 
     public ServiceResult(HttpStatus status, String message){
         this(status);
-        this.errorDescriptions.add(message);
+        this.getErrorDescriptions().add(message);
     }
 
     public TResult getResult() {
