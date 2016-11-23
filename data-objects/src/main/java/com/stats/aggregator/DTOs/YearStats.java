@@ -22,10 +22,15 @@ public class YearStats {
 
     public YearStats(Calendar now) {
         int currMonth = now.get(Calendar.MONTH);
-        int noOfMonthsLeft = 12 - currMonth; // january == 0
+        int noOfMonthsLeft = 12 - currMonth; // january == 0 => december == 11
         setMonthsStats(new HashMap<>(noOfMonthsLeft));
         for(int i = currMonth; i < 12; i++){
             getMonthsStats().put(Integer.toString(i), new MonthStats(now));
+
+            int month = now.get(Calendar.MONTH);
+            if(month != Calendar.DECEMBER){
+                now.set(Calendar.MONTH, ++month);
+            }
         }
     }
 

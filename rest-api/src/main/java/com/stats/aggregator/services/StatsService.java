@@ -1,5 +1,6 @@
 package com.stats.aggregator.services;
 
+import com.stats.aggregator.DTOs.enums.AggregationType;
 import com.stats.aggregator.services.contracts.IStatsService;
 import com.stats.aggregator.services.contracts.ServiceResult;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,7 @@ public class StatsService implements IStatsService {
      * @return min value
      */
     @Override
-    public ServiceResult<Double> getMin(String queryId) {
+    public ServiceResult<Double> getMin(AggregationType aggregationType, String queryId) {
         return null;
     }
 
@@ -32,7 +33,7 @@ public class StatsService implements IStatsService {
      * @return min value
      */
     @Override
-    public ServiceResult<Iterable<Double>> getMin(String queryId, Long from, Long to) {
+    public ServiceResult<Iterable<Double>> getMin(AggregationType aggregationType, String queryId, Long from, Long to) {
         try {
             return null;
         } catch (DataAccessException e){
@@ -50,7 +51,7 @@ public class StatsService implements IStatsService {
      * @return max value
      */
     @Override
-    public ServiceResult<Double> getMax(String queryId) {
+    public ServiceResult<Double> getMax(AggregationType aggregationType, String queryId) {
         try {
             return null;
         } catch (DataAccessException e){
@@ -70,7 +71,7 @@ public class StatsService implements IStatsService {
      * @return max value
      */
     @Override
-    public ServiceResult<Iterable<Double>> getMax(String queryId, Long from, Long to) {
+    public ServiceResult<Iterable<Double>> getMax(AggregationType aggregationType, String queryId, Long from, Long to) {
         try {
             return null;
         } catch (DataAccessException e){
@@ -88,7 +89,7 @@ public class StatsService implements IStatsService {
      *                average
      */
     @Override
-    public ServiceResult<Double> getAvg(String queryId) {
+    public ServiceResult<Double> getAvg(AggregationType aggregationType, String queryId) {
         try {
             return null;
         } catch (DataAccessException e){
@@ -108,7 +109,7 @@ public class StatsService implements IStatsService {
      * @return average value
      */
     @Override
-    public ServiceResult<Iterable<Double>> getAvg(String queryId, Long from, Long to) {
+    public ServiceResult<Iterable<Double>> getAvg(AggregationType aggregationType, String queryId, Long from, Long to) {
         try {
             return null;
         } catch (DataAccessException e){
@@ -126,7 +127,7 @@ public class StatsService implements IStatsService {
      * @return median value
      */
     @Override
-    public ServiceResult<Double> getMedian(String queryId) {
+    public ServiceResult<Double> getMedian(AggregationType aggregationType, String queryId) {
         try {
             return null;
         } catch (DataAccessException e){
@@ -146,7 +147,7 @@ public class StatsService implements IStatsService {
      * @return median value
      */
     @Override
-    public ServiceResult<Iterable<Double>> getMedian(String queryId, Long from, Long to) {
+    public ServiceResult<Iterable<Double>> getMedian(AggregationType aggregationType, String queryId, Long from, Long to) {
         try {
             return null;
         } catch (DataAccessException e){

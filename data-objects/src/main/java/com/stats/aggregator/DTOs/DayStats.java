@@ -27,6 +27,9 @@ public class DayStats {
         for(int i = currHour; i < 24; i++){
             getHoursStats().put(Integer.toString(i), new HourStats());
         }
+
+        // Start next day from 00:00
+        now.set(Calendar.HOUR_OF_DAY, 0);
     }
 
     public Map<String, HourStats> getHoursStats() {

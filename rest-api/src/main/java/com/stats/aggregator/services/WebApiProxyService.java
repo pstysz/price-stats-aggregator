@@ -22,13 +22,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import javax.xml.rpc.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 
 
 @Service
@@ -49,16 +47,17 @@ public class WebApiProxyService implements IWebApiProxyService {
      */
     @Override
     @Async
-    public Future<ServiceResult<AuctionsList>> getAuctions(Filter[] filters){
+    public ServiceResult<AuctionsList> getAuctions(Filter[] filters){
         logger.info("Start getAuctions()");
         try {
             if(filters == null){
-                return new AsyncResult<>(new ServiceResult<>(HttpStatus.BAD_REQUEST,
-                        String.format(ErrorMsg.INVALID_PARAMETER.toString(), "filters")));
+                return new ServiceResult<>(HttpStatus.BAD_REQUEST,
+                        String.format(ErrorMsg.INVALID_PARAMETER.toString(), "filters"));
             }
 
             FilterOptionsType[] arrayOfFilters = new FilterOptionsType[filters.length];
             int i = 0;
+
             for(Filter filter : filters){
                 arrayOfFilters[i++] = filter.toFilterOptionsType();
             }
@@ -75,20 +74,14 @@ public class WebApiProxyService implements IWebApiProxyService {
 
             AuctionsList model = new AuctionsList(response);
             logger.info("Stop getAuctions()");
-            return new AsyncResult<>(new ServiceResult<>(model));
+            return new ServiceResult<>(model);
 
-        } catch (DataAccessException e){
+        } catch (DataAccessException | java.rmi.RemoteException e){
             if(logger.isWarnEnabled()){
                 logger.warn(e);
             }
-            return new AsyncResult<>(new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR));
-        } catch (java.rmi.RemoteException e){
-            if(logger.isWarnEnabled()){
-                logger.warn(e);
-            }
-            return new AsyncResult<>(new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR));
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -102,12 +95,7 @@ public class WebApiProxyService implements IWebApiProxyService {
             DoGetCatsDataResponse response = allegroClient.doGetCatsData(new DoGetCatsDataRequest());
             CategoriesList model = new CategoriesList(response);
             return new ServiceResult<>(model);
-        } catch (DataAccessException e){
-            if(logger.isWarnEnabled()){
-                logger.warn(e);
-            }
-            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (java.rmi.RemoteException e){
+        } catch (DataAccessException | java.rmi.RemoteException e){
             if(logger.isWarnEnabled()){
                 logger.warn(e);
             }
@@ -152,12 +140,7 @@ public class WebApiProxyService implements IWebApiProxyService {
             }
 
             return new ServiceResult<>(new ArrayList<>());
-        } catch (DataAccessException e){
-            if(logger.isWarnEnabled()){
-                logger.warn(e);
-            }
-            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (java.rmi.RemoteException e){
+        } catch (DataAccessException | java.rmi.RemoteException e){
             if(logger.isWarnEnabled()){
                 logger.warn(e);
             }

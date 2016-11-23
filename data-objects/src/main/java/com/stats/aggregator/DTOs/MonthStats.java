@@ -27,6 +27,9 @@ public class MonthStats {
         for(int i = currDay; i <= lastDayInMonth; i++){
             getDaysStats().put(Integer.toString(i), new DayStats(now));
         }
+
+        // Start next month from first day
+        now.set(Calendar.DAY_OF_MONTH, 1);
     }
 
     public Map<String, DayStats> getDaysStats() {

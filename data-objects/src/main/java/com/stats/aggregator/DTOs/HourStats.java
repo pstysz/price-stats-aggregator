@@ -13,7 +13,7 @@ public class HourStats {
 
     public HourStats() {
         this.setValues(new ArrayList<>(1));
-        getValues().add(new BigDecimal("0"));
+        getValues().add(new BigDecimal("1"));
     }
 
     public HourStats(List<BigDecimal> values) {
