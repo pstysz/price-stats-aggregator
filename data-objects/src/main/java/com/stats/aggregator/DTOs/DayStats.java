@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DayStats {
+    private String aggId;
     private Map<String, HourStats> hoursStats;
     private BigDecimal min;
     private BigDecimal max;
@@ -20,12 +21,14 @@ public class DayStats {
         }
     }
 
-    public DayStats(Calendar now) {
+    public DayStats(Calendar now, String aggId) {
+        this.aggId = aggId;
         int currHour = now.get(Calendar.HOUR_OF_DAY);
         int noOfHoursLeft = 24 - currHour;
         setHoursStats(new HashMap<>(noOfHoursLeft));
         for(int i = currHour; i < 24; i++){
-            getHoursStats().put(Integer.toString(i), new HourStats());
+            String hourAggId = aggId.concat(String.format("%02d", i));
+            getHoursStats().put(Integer.toString(i), new HourStats(hourAggId));
         }
 
         // Start next day from 00:00
@@ -86,5 +89,13 @@ public class DayStats {
 
     public void setMedian(BigDecimal median) {
         this.median = median;
+    }
+
+    public String getAggId() {
+        return aggId;
+    }
+
+    public void setAggId(String aggId) {
+        this.aggId = aggId;
     }
 }

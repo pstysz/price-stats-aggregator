@@ -47,7 +47,8 @@ public class FilterQuery {
         this.filters = new Filter[0];
         setStats(new HashMap<>(1));
         Calendar now = Calendar.getInstance();
-        this.stats.put(Integer.toString(now.get(Calendar.YEAR)), new YearStats(now));
+        String yearAggId = Integer.toString(now.get(Calendar.YEAR));
+        this.stats.put(Integer.toString(now.get(Calendar.YEAR)), new YearStats(now, yearAggId));
     }
 
     public FilterQuery(String id, String userId, Filter[] filters) {

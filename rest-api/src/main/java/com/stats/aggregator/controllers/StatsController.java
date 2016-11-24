@@ -1,5 +1,6 @@
 package com.stats.aggregator.controllers;
 
+import com.stats.aggregator.DTOs.enums.AggregationType;
 import com.stats.aggregator.services.contracts.IStatsService;
 import com.stats.aggregator.services.contracts.ServiceResult;
 import io.swagger.annotations.Api;
@@ -32,9 +33,10 @@ public class StatsController {
      */
     @ApiOperation(value = "Gets the latest minimal value of filter in selected query",
             response = Double.class, produces = "application/json")
-    @GetMapping(value = "min/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity getMin(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId){
-        ServiceResult<Double> result = statsService.getMin(queryId);
+    @GetMapping(value = "min/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity getMin(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                 @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType){
+        ServiceResult<Double> result = statsService.getMin(AggregationType.fromString(aggregationType), queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -48,11 +50,12 @@ public class StatsController {
     @ApiOperation(value = "Gets the minimal values of filter in selected query, between two dates",
             response = Double.class, responseContainer = "List",
             produces = "application/json")
-    @GetMapping(value = "min-range/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "min-range/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity getMin(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                 @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                  @RequestParam(required=false) @ApiParam(value = "time span from", required = false) Long from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false) Long to){
-        ServiceResult<Iterable<Double>> result = statsService.getMin(queryId, from, to);
+        ServiceResult<Iterable<Double>> result = statsService.getMin(AggregationType.fromString(aggregationType), queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -63,9 +66,10 @@ public class StatsController {
      */
     @ApiOperation(value = "Gets the latest maximal value of filter in selected query",
             response = Double.class, produces = "application/json")
-    @GetMapping(value = "max/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity getMax(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId){
-        ServiceResult<Double> result = statsService.getMax(queryId);
+    @GetMapping(value = "max/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity getMax(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                 @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType){
+        ServiceResult<Double> result = statsService.getMax(AggregationType.fromString(aggregationType), queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -79,11 +83,12 @@ public class StatsController {
     @ApiOperation(value = "Gets the maximal values of filter in selected query, between two dates",
             response = Double.class, responseContainer = "List",
             produces = "application/json")
-    @GetMapping(value = "max-range/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "max-range/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity getMax(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                 @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                  @RequestParam(required=false) @ApiParam(value = "time span from", required = false) Long from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false) Long to){
-        ServiceResult<Iterable<Double>> result = statsService.getMax(queryId, from, to);
+        ServiceResult<Iterable<Double>> result = statsService.getMax(AggregationType.fromString(aggregationType), queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -94,9 +99,10 @@ public class StatsController {
      */
     @ApiOperation(value = "Gets the latest average value of filter in selected query",
             response = Double.class, produces = "application/json")
-    @GetMapping(value = "avg/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity getAvg(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId){
-        ServiceResult<Double> result = statsService.getAvg(queryId);
+    @GetMapping(value = "avg/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity getAvg(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                 @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType){
+        ServiceResult<Double> result = statsService.getAvg(AggregationType.fromString(aggregationType), queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -110,11 +116,12 @@ public class StatsController {
     @ApiOperation(value = "Gets the average values of filter in selected query, between two dates",
             response = Double.class, responseContainer = "List",
             produces = "application/json")
-    @GetMapping(value = "avg-range/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "avg-range/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity getAvg(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                 @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                  @RequestParam(required=false) @ApiParam(value = "time span from", required = false) Long from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false) Long to){
-        ServiceResult<Iterable<Double>> result = statsService.getAvg(queryId, from, to);
+        ServiceResult<Iterable<Double>> result = statsService.getAvg(AggregationType.fromString(aggregationType), queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -125,9 +132,10 @@ public class StatsController {
      */
     @ApiOperation(value = "Gets the latest median value of filter in selected query",
             response = Double.class, produces = "application/json")
-    @GetMapping(value = "median/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity getMedian(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId){
-        ServiceResult<Double> result = statsService.getMedian(queryId);
+    @GetMapping(value = "median/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity getMedian(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                    @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType){
+        ServiceResult<Double> result = statsService.getMedian(AggregationType.fromString(aggregationType), queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -141,11 +149,12 @@ public class StatsController {
     @ApiOperation(value = "Gets the median value of filter in selected query, between two dates",
             response = Double.class, responseContainer = "List",
             produces = "application/json")
-    @GetMapping(value = "median-range/{queryId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "median-range/{queryId}/{aggregationType}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity getMedian(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
+                                    @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                     @RequestParam(required=false) @ApiParam(value = "time span from", required = false) Long from,
                                     @RequestParam(required=false) @ApiParam(value = "time span to", required = false) Long to){
-        ServiceResult<Iterable<Double>> result = statsService.getMedian(queryId, from, to);
+        ServiceResult<Iterable<Double>> result = statsService.getMedian(AggregationType.fromString(aggregationType), queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 }

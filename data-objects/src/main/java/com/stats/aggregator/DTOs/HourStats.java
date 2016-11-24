@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HourStats {
+    private String aggId;
     private List<BigDecimal> values;
     private BigDecimal min;
     private BigDecimal max;
@@ -12,6 +13,12 @@ public class HourStats {
     private BigDecimal median;
 
     public HourStats() {
+        this.setValues(new ArrayList<>(1));
+        getValues().add(new BigDecimal("1"));
+    }
+
+    public HourStats(String aggId) {
+        this.aggId = aggId;
         this.setValues(new ArrayList<>(1));
         getValues().add(new BigDecimal("1"));
     }
@@ -58,5 +65,13 @@ public class HourStats {
 
     public void setMedian(BigDecimal median) {
         this.median = median;
+    }
+
+    public String getAggId() {
+        return aggId;
+    }
+
+    public void setAggId(String aggId) {
+        this.aggId = aggId;
     }
 }

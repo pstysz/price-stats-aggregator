@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class YearStats {
+    private String aggId;
     private Map<String, MonthStats> monthsStats;
     private BigDecimal min;
     private BigDecimal max;
@@ -20,12 +21,13 @@ public class YearStats {
         }
     }
 
-    public YearStats(Calendar now) {
+    public YearStats(Calendar now, String aggId) {
+        this.aggId = aggId;
         int currMonth = now.get(Calendar.MONTH);
-        int noOfMonthsLeft = 12 - currMonth; // january == 0 => december == 11
-        setMonthsStats(new HashMap<>(noOfMonthsLeft));
-        for(int i = currMonth; i < 12; i++){
-            getMonthsStats().put(Integer.toString(i), new MonthStats(now));
+        setMonthsStats(new HashMap<>(Calendar.DECEMBER - currMonth));
+        for(int i = currMonth; i <= Calendar.DECEMBER; i++){
+            String monthAggId = aggId.concat(String.format("%02d", i));
+            getMonthsStats().put(Integer.toString(i), new MonthStats(now, monthAggId));
 
             int month = now.get(Calendar.MONTH);
             if(month != Calendar.DECEMBER){
@@ -74,5 +76,13 @@ public class YearStats {
 
     public void setHourValues(String month,String day, String hour, List<BigDecimal> values) {
         this.getHourStats(month, day, hour).setValues(values);
+    }
+
+    public String getAggId() {
+        return aggId;
+    }
+
+    public void setAggId(String aggId) {
+        this.aggId = aggId;
     }
 }

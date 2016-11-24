@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MonthStats {
+    private String aggId;
     private Map<String, DayStats> daysStats;
     private BigDecimal min;
     private BigDecimal max;
@@ -20,12 +21,14 @@ public class MonthStats {
         }
     }
 
-    public MonthStats(Calendar now) {
+    public MonthStats(Calendar now, String aggId) {
+        this.aggId = aggId;
         int currDay = now.get(Calendar.DAY_OF_MONTH);
         int lastDayInMonth = now.getActualMaximum(Calendar.DAY_OF_MONTH);
         setDaysStats(new HashMap<>(lastDayInMonth - currDay + 1));
         for(int i = currDay; i <= lastDayInMonth; i++){
-            getDaysStats().put(Integer.toString(i), new DayStats(now));
+            String dayAggId = aggId.concat(String.format("%02d", i));
+            getDaysStats().put(Integer.toString(i), new DayStats(now, dayAggId));
         }
 
         // Start next month from first day
@@ -62,5 +65,13 @@ public class MonthStats {
 
     public void setHourValues(String day, String hour, List<BigDecimal> values) {
         this.getDayStats(day).setHourValues(hour, values);
+    }
+
+    public String getAggId() {
+        return aggId;
+    }
+
+    public void setAggId(String aggId) {
+        this.aggId = aggId;
     }
 }
