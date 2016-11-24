@@ -4,9 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Document(collection = "filter_queries")
 public class FilterQuery {
@@ -14,10 +13,10 @@ public class FilterQuery {
     private String id;
     @Indexed
     private String userId;
-    
     private Filter[] filters;
-    
-    private Map<String, YearStats> stats;
+    private List<BaseStats> yearsStats;
+    private List<BaseStats> monthsStats;
+    private List<DetailedStats<DetailedStats<BigDecimal>>> daysStats;
 
     public String getId() {
         return id;
@@ -45,10 +44,40 @@ public class FilterQuery {
 
     public FilterQuery() {
         this.filters = new Filter[0];
-        setStats(new HashMap<>(1));
+
         Calendar now = Calendar.getInstance();
+        setYearsStats(new ArrayList<>(1));
         String yearAggId = Integer.toString(now.get(Calendar.YEAR));
-        this.stats.put(Integer.toString(now.get(Calendar.YEAR)), new YearStats(now, yearAggId));
+        this.yearsStats.add(new BaseStats(yearAggId));
+
+        int currMonth = now.get(Calendar.MONTH) + 1; // january == 0, december == 11
+        setMonthsStats(new ArrayList<>(Calendar.DECEMBER - currMonth + 2));
+        for(int i = currMonth; i <= Calendar.DECEMBER + 1; i++) {
+            String monthAggId = yearAggId.concat(String.format("%02d", i));
+            this.monthsStats.add(new BaseStats(monthAggId));
+
+            int currDay = now.get(Calendar.DAY_OF_MONTH);
+            int lastDayInMonth = now.getActualMaximum(Calendar.DAY_OF_MONTH);
+            setDaysStats(new ArrayList<>(lastDayInMonth - currDay + 1));
+            for(int j = currDay; j <= lastDayInMonth; j++){
+                String dayAggId = monthAggId.concat(String.format("%02d", j));
+
+                int currHour = now.get(Calendar.HOUR_OF_DAY);
+                int noOfHoursLeft = 24 - currHour;
+                DetailedStats<DetailedStats<BigDecimal>> day = new DetailedStats<>(dayAggId, noOfHoursLeft);
+                for(int k = currHour; k < 24; k++){
+                    String hourAggId = dayAggId.concat(String.format("%02d", k));
+                    day.getValues().add(new DetailedStats<>(hourAggId));
+                }
+
+                this.daysStats.add(day);
+                // Start next day from 00:00
+                now.set(Calendar.HOUR_OF_DAY, 0);
+            }
+
+            // start next month from the first day
+            now.set(Calendar.DAY_OF_MONTH, 1);
+        }
     }
 
     public FilterQuery(String id, String userId, Filter[] filters) {
@@ -58,19 +87,27 @@ public class FilterQuery {
         this.filters = filters;
     }
 
-    public Map<String, YearStats> getStats() {
-        return stats;
+    public List<BaseStats> getYearsStats() {
+        return yearsStats;
     }
 
-    public YearStats getStats(String year) {
-        return stats.get(year);
+    public void setYearsStats(List<BaseStats> yearsStats) {
+        this.yearsStats = yearsStats;
     }
 
-    public void setStats(Map<String, YearStats> stats) {
-        this.stats = stats;
+    public List<BaseStats> getMonthsStats() {
+        return monthsStats;
     }
 
-    public void setStats(String year, YearStats stats) {
-        this.stats.put(year, stats);
+    public void setMonthsStats(List<BaseStats> monthsStats) {
+        this.monthsStats = monthsStats;
+    }
+
+    public List<DetailedStats<DetailedStats<BigDecimal>>> getDaysStats() {
+        return daysStats;
+    }
+
+    public void setDaysStats(List<DetailedStats<DetailedStats<BigDecimal>>> daysStats) {
+        this.daysStats = daysStats;
     }
 }
