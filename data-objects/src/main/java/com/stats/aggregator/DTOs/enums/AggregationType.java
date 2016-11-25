@@ -13,6 +13,10 @@ public enum AggregationType {
     public int getValue() { return id; }
 
     public static AggregationType fromString(String name) {
-        return EnumHelper.getEnumFromString(AggregationType.class, name);
+        try {
+            return EnumHelper.getEnumFromString(AggregationType.class, name);
+        } catch (IllegalArgumentException e) {
+            return AggregationType.UNKNOWN;
+        }
     }
 }

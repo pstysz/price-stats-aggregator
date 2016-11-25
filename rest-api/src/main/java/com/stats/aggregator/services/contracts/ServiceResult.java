@@ -1,5 +1,6 @@
 package com.stats.aggregator.services.contracts;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ public class ServiceResult<TResult> {
     private TResult result;
     private boolean isSuccess;
     private HttpStatus status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Exception exception;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> errorDescriptions;
 
     public ServiceResult(){
