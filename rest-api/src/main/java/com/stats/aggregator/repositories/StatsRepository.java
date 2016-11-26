@@ -3,11 +3,11 @@ package com.stats.aggregator.repositories;
 import com.mongodb.DBObject;
 import com.stats.aggregator.repositories.contracts.IStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
-
 import java.math.BigDecimal;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -34,10 +34,12 @@ public class StatsRepository implements IStatsRepository {
     @Override
     public BigDecimal getAnnualMin(String queryId) {
         Aggregation aggregation = newAggregation(
-                match(Criteria.where("_id").is(queryId))      ,
-                group("_id").min("yearsStats.min").as("min"),
-                project("min").andExclude("_id"),
-                unwind("min")
+                 match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.DESC, "yearsStats.aggId")
+                ,limit(1)
+                ,project("yearsStats.min")
         );
         DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
                 .getUniqueMappedResult();
@@ -71,10 +73,12 @@ public class StatsRepository implements IStatsRepository {
     @Override
     public BigDecimal getAnnualMax(String queryId) {
         Aggregation aggregation = newAggregation(
-                match(Criteria.where("_id").is(queryId))      ,
-                group("_id").max("yearsStats.max").as("max"),
-                project("max").andExclude("_id"),
-                unwind("max")
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.DESC, "yearsStats.aggId")
+                ,limit(1)
+                ,project("yearsStats.max")
         );
         DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
                 .getUniqueMappedResult();
@@ -97,6 +101,7 @@ public class StatsRepository implements IStatsRepository {
     @Override
     public Iterable<BigDecimal> getAnnualMax(String queryId, String from, String to) {
         return null;
+        
     }
 
     /**
@@ -106,8 +111,23 @@ public class StatsRepository implements IStatsRepository {
      *                average
      */
     @Override
-    public BigDecimal getAnnualAvg(String queryId) {
-        return null;
+    public BigDecimal getAnnualAvg(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.DESC, "yearsStats.aggId")
+                ,limit(1)
+                ,project("yearsStats.avg")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("avg"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -130,8 +150,23 @@ public class StatsRepository implements IStatsRepository {
      * @return median annual value
      */
     @Override
-    public BigDecimal getAnnualMedian(String queryId) {
-        return null;
+    public BigDecimal getAnnualMedian(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.DESC, "yearsStats.aggId")
+                ,limit(1)
+                ,project("yearsStats.median")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("median"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -155,7 +190,22 @@ public class StatsRepository implements IStatsRepository {
      */
     @Override
     public BigDecimal getMonthsMin(String queryId) {
-        return null;
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.DESC, "monthsStats.aggId")
+                ,limit(1)
+                ,project("monthsStats.min")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("min"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -178,8 +228,23 @@ public class StatsRepository implements IStatsRepository {
      * @return max month's value
      */
     @Override
-    public BigDecimal getMonthsMax(String queryId) {
-        return null;
+    public BigDecimal getMonthsMax(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.DESC, "monthsStats.aggId")
+                ,limit(1)
+                ,project("monthsStats.max")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("max"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -202,8 +267,23 @@ public class StatsRepository implements IStatsRepository {
      *                average
      */
     @Override
-    public BigDecimal getMonthsAvg(String queryId) {
-        return null;
+    public BigDecimal getMonthsAvg(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.DESC, "monthsStats.aggId")
+                ,limit(1)
+                ,project("monthsStats.avg")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("avg"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -226,8 +306,23 @@ public class StatsRepository implements IStatsRepository {
      * @return median month's value
      */
     @Override
-    public BigDecimal getMonthsMedian(String queryId) {
-        return null;
+    public BigDecimal getMonthsMedian(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.DESC, "monthsStats.aggId")
+                ,limit(1)
+                ,project("monthsStats.median")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("median"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -251,7 +346,22 @@ public class StatsRepository implements IStatsRepository {
      */
     @Override
     public BigDecimal getDaysMin(String queryId) {
-        return null;
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.DESC, "daysStats.aggId")
+                ,limit(1)
+                ,project("daysStats.min")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("min"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -274,8 +384,23 @@ public class StatsRepository implements IStatsRepository {
      * @return max day's value
      */
     @Override
-    public BigDecimal getDaysMax(String queryId) {
-        return null;
+    public BigDecimal getDaysMax(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.DESC, "daysStats.aggId")
+                ,limit(1)
+                ,project("daysStats.max")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("max"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -298,8 +423,23 @@ public class StatsRepository implements IStatsRepository {
      *                average
      */
     @Override
-    public BigDecimal getDaysAvg(String queryId) {
-        return null;
+    public BigDecimal getDaysAvg(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.DESC, "daysStats.aggId")
+                ,limit(1)
+                ,project("daysStats.avg")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("avg"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**
@@ -322,8 +462,23 @@ public class StatsRepository implements IStatsRepository {
      * @return median day's value
      */
     @Override
-    public BigDecimal getDaysMedian(String queryId) {
-        return null;
+    public BigDecimal getDaysMedian(String queryId){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.DESC, "daysStats.aggId")
+                ,limit(1)
+                ,project("daysStats.median")
+        );
+        DBObject result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getUniqueMappedResult();
+
+        if(result != null){
+            return new BigDecimal((String)result.get("median"));
+        }
+
+        return new BigDecimal("0");
     }
 
     /**

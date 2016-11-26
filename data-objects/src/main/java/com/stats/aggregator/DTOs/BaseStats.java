@@ -1,8 +1,11 @@
 package com.stats.aggregator.DTOs;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 import java.math.BigDecimal;
 
 public class BaseStats {
+    @Indexed
     protected String aggId;
     protected BigDecimal min;
     protected BigDecimal max;
