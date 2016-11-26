@@ -2,6 +2,7 @@ package com.stats.aggregator.services.contracts;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Provides statistic data for stored user queries
@@ -24,7 +25,7 @@ public interface IStatsService {
      * @param to time span to
      * @return min value
      */
-    ServiceResult<Iterable<BigDecimal>> getMin(String aggregationType, String queryId, LocalDate from, LocalDate to);
+    ServiceResult<Map<String, BigDecimal>> getMin(String aggregationType, String queryId, LocalDate from, LocalDate to);
 
     /**
      * Gets latest maximal value of filter in selected query
@@ -40,7 +41,7 @@ public interface IStatsService {
      * @param to time span to
      * @return max value
      */
-    ServiceResult<Iterable<BigDecimal>> getMax(String aggregationType, String queryId, LocalDate from, LocalDate to);
+    ServiceResult<Map<String, BigDecimal>> getMax(String aggregationType, String queryId, LocalDate from, LocalDate to);
 
     /**
      * Gets latest average value of filter in selected query
@@ -55,7 +56,7 @@ public interface IStatsService {
      * @param to time span to
      * @return average value
      */
-    ServiceResult<Iterable<BigDecimal>> getAvg(String aggregationType, String queryId, LocalDate from, LocalDate to);
+    ServiceResult<Map<String, BigDecimal>> getAvg(String aggregationType, String queryId, LocalDate from, LocalDate to);
 
     /**
      * Gets latest median value of filter in selected query
@@ -71,5 +72,5 @@ public interface IStatsService {
      * @param to time span to
      * @return median value
      */
-    ServiceResult<Iterable<BigDecimal>> getMedian(String aggregationType, String queryId, LocalDate from, LocalDate to);
+    ServiceResult<Map<String, BigDecimal>> getMedian(String aggregationType, String queryId, LocalDate from, LocalDate to);
 }

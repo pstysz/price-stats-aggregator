@@ -1,6 +1,7 @@
 package com.stats.aggregator.repositories.contracts;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Handles operations on statistic data
@@ -23,7 +24,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return min annual value
      */
-    Iterable<BigDecimal> getAnnualMin(String queryId, String from, String to);
+    Map<String, BigDecimal> getAnnualMin(String queryId, String from, String to);
 
     /**
      * Gets the latest maximal annual value of the filter in selected query
@@ -39,7 +40,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return max annual value
      */
-    Iterable<BigDecimal> getAnnualMax(String queryId, String from, String to);
+    Map<String, BigDecimal> getAnnualMax(String queryId, String from, String to);
 
     /**
      * Gets the latest average annual value of the filter in selected query
@@ -54,7 +55,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return average annual value
      */
-    Iterable<BigDecimal> getAnnualAvg(String queryId, String from, String to);
+    Map<String, BigDecimal> getAnnualAvg(String queryId, String from, String to);
 
     /**
      * Gets the latest median annual value of the filter in selected query
@@ -70,7 +71,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return median annual value
      */
-    Iterable<BigDecimal> getAnnualMedian(String queryId, String from, String to);
+    Map<String, BigDecimal> getAnnualMedian(String queryId, String from, String to);
 
     // -------------------- MONTH ----------------------
 
@@ -88,7 +89,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return min month's value
      */
-    Iterable<BigDecimal> getMonthsMin(String queryId, String from, String to);
+    Map<String, BigDecimal> getMonthsMin(String queryId, String from, String to);
 
     /**
      * Gets the latest maximal month's value of the filter in selected query
@@ -104,7 +105,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return max month's value
      */
-    Iterable<BigDecimal> getMonthsMax(String queryId, String from, String to);
+    Map<String, BigDecimal> getMonthsMax(String queryId, String from, String to);
 
     /**
      * Gets the latest average month's value of the filter in selected query
@@ -119,7 +120,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return average month's value
      */
-    Iterable<BigDecimal> getMonthsAvg(String queryId, String from, String to);
+    Map<String, BigDecimal> getMonthsAvg(String queryId, String from, String to);
 
     /**
      * Gets the latest median month's value of the filter in selected query
@@ -135,7 +136,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return median month's value
      */
-    Iterable<BigDecimal> getMonthsMedian(String queryId, String from, String to);
+    Map<String, BigDecimal> getMonthsMedian(String queryId, String from, String to);
 
 
     // -------------------- DAY ----------------------
@@ -154,7 +155,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return min day's value
      */
-    Iterable<BigDecimal> getDaysMin(String queryId, String from, String to);
+    Map<String, BigDecimal> getDaysMin(String queryId, String from, String to);
 
     /**
      * Gets the latest maximal day's value of the filter in selected query
@@ -170,7 +171,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return max day's value
      */
-    Iterable<BigDecimal> getDaysMax(String queryId, String from, String to);
+    Map<String, BigDecimal> getDaysMax(String queryId, String from, String to);
 
     /**
      * Gets the latest average day's value of the filter in selected query
@@ -185,7 +186,7 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return average day's value
      */
-    Iterable<BigDecimal> getDaysAvg(String queryId, String from, String to);
+    Map<String, BigDecimal> getDaysAvg(String queryId, String from, String to);
 
     /**
      * Gets the latest median day's value of the filter in selected query
@@ -201,5 +202,5 @@ public interface IStatsRepository  {
      * @param to time span to
      * @return median day's value
      */
-    Iterable<BigDecimal> getDaysMedian(String queryId, String from, String to);
+    Map<String, BigDecimal> getDaysMedian(String queryId, String from, String to);
 }

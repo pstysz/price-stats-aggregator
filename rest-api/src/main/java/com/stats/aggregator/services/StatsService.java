@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 @Service
 public class StatsService implements IStatsService {
@@ -72,7 +73,7 @@ public class StatsService implements IStatsService {
      * @return min value
      */
     @Override
-    public ServiceResult<Iterable<BigDecimal>> getMin(String aggregationType, String queryId, LocalDate from, LocalDate to) {
+    public ServiceResult<Map<String, BigDecimal>> getMin(String aggregationType, String queryId, LocalDate from, LocalDate to) {
         try {
             AggregationType type = AggregationType.fromString(aggregationType);
 
@@ -156,7 +157,7 @@ public class StatsService implements IStatsService {
      * @return max value
      */
     @Override
-    public ServiceResult<Iterable<BigDecimal>> getMax(String aggregationType, String queryId, LocalDate from, LocalDate to) {
+    public ServiceResult<Map<String, BigDecimal>> getMax(String aggregationType, String queryId, LocalDate from, LocalDate to) {
         try {
             AggregationType type = AggregationType.fromString(aggregationType);
 
@@ -240,7 +241,7 @@ public class StatsService implements IStatsService {
      * @return average value
      */
     @Override
-    public ServiceResult<Iterable<BigDecimal>> getAvg(String aggregationType, String queryId, LocalDate from, LocalDate to) {
+    public ServiceResult<Map<String, BigDecimal>> getAvg(String aggregationType, String queryId, LocalDate from, LocalDate to) {
         try {
             AggregationType type = AggregationType.fromString(aggregationType);
 
@@ -324,7 +325,7 @@ public class StatsService implements IStatsService {
      * @return median value
      */
     @Override
-    public ServiceResult<Iterable<BigDecimal>> getMedian(String aggregationType, String queryId, LocalDate from, LocalDate to) {
+    public ServiceResult<Map<String, BigDecimal>> getMedian(String aggregationType, String queryId, LocalDate from, LocalDate to) {
         try {
             AggregationType type = AggregationType.fromString(aggregationType);
 

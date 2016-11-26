@@ -1,6 +1,7 @@
 package com.stats.aggregator.repositories;
 
 import com.mongodb.DBObject;
+import com.stats.aggregator.common.utils.CollectorsHelper;
 import com.stats.aggregator.repositories.contracts.IStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -8,7 +9,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -60,8 +65,27 @@ public class StatsRepository implements IStatsRepository {
      * @return min annual value
      */
     @Override
-    public Iterable<BigDecimal> getAnnualMin(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getAnnualMin(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.ASC, "yearsStats.aggId")
+                ,match(Criteria.where("yearsStats.aggId").gte(from).lte(to))
+                ,unwind("yearsStats")
+                ,project("yearsStats.aggId","yearsStats.min")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("min")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -99,9 +123,27 @@ public class StatsRepository implements IStatsRepository {
      * @return max annual value
      */
     @Override
-    public Iterable<BigDecimal> getAnnualMax(String queryId, String from, String to) {
-        return null;
-        
+    public Map<String, BigDecimal> getAnnualMax(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.ASC, "yearsStats.aggId")
+                ,match(Criteria.where("yearsStats.aggId").gte(from).lte(to))
+                ,unwind("yearsStats")
+                ,project("yearsStats.aggId","yearsStats.max")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("max")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -139,8 +181,27 @@ public class StatsRepository implements IStatsRepository {
      * @return average annual value
      */
     @Override
-    public Iterable<BigDecimal> getAnnualAvg(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getAnnualAvg(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.ASC, "yearsStats.aggId")
+                ,match(Criteria.where("yearsStats.aggId").gte(from).lte(to))
+                ,unwind("yearsStats")
+                ,project("yearsStats.aggId","yearsStats.avg")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("avg")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -178,8 +239,27 @@ public class StatsRepository implements IStatsRepository {
      * @return median annual value
      */
     @Override
-    public Iterable<BigDecimal> getAnnualMedian(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getAnnualMedian(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("yearsStats").andExclude("_id")
+                ,unwind("yearsStats")
+                ,sort(Sort.Direction.ASC, "yearsStats.aggId")
+                ,match(Criteria.where("yearsStats.aggId").gte(from).lte(to))
+                ,unwind("yearsStats")
+                ,project("yearsStats.aggId","yearsStats.median")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("median")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -217,8 +297,27 @@ public class StatsRepository implements IStatsRepository {
      * @return min month's value
      */
     @Override
-    public Iterable<BigDecimal> getMonthsMin(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getMonthsMin(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.ASC, "monthsStats.aggId")
+                ,match(Criteria.where("monthsStats.aggId").gte(from).lte(to))
+                ,unwind("monthsStats")
+                ,project("monthsStats.aggId","monthsStats.min")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("min")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -256,8 +355,27 @@ public class StatsRepository implements IStatsRepository {
      * @return max month's value
      */
     @Override
-    public Iterable<BigDecimal> getMonthsMax(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getMonthsMax(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.ASC, "monthsStats.aggId")
+                ,match(Criteria.where("monthsStats.aggId").gte(from).lte(to))
+                ,unwind("monthsStats")
+                ,project("monthsStats.aggId","monthsStats.max")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("max")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -295,8 +413,27 @@ public class StatsRepository implements IStatsRepository {
      * @return average month's value
      */
     @Override
-    public Iterable<BigDecimal> getMonthsAvg(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getMonthsAvg(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.ASC, "monthsStats.aggId")
+                ,match(Criteria.where("monthsStats.aggId").gte(from).lte(to))
+                ,unwind("monthsStats")
+                ,project("monthsStats.aggId","monthsStats.avg")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("avg")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -334,8 +471,27 @@ public class StatsRepository implements IStatsRepository {
      * @return median month's value
      */
     @Override
-    public Iterable<BigDecimal> getMonthsMedian(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getMonthsMedian(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("monthsStats").andExclude("_id")
+                ,unwind("monthsStats")
+                ,sort(Sort.Direction.ASC, "monthsStats.aggId")
+                ,match(Criteria.where("monthsStats.aggId").gte(from).lte(to))
+                ,unwind("monthsStats")
+                ,project("monthsStats.aggId","monthsStats.median")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("median")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -373,8 +529,27 @@ public class StatsRepository implements IStatsRepository {
      * @return min day's value
      */
     @Override
-    public Iterable<BigDecimal> getDaysMin(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getDaysMin(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                 match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.ASC, "daysStats.aggId")
+                ,match(Criteria.where("daysStats.aggId").gte(from).lte(to))
+                ,unwind("daysStats")
+                ,project("daysStats.aggId","daysStats.min")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("min")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -412,10 +587,28 @@ public class StatsRepository implements IStatsRepository {
      * @return max day's value
      */
     @Override
-    public Iterable<BigDecimal> getDaysMax(String queryId, String from, String to) {
-        return null;
-    }
+    public Map<String, BigDecimal> getDaysMax(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.ASC, "daysStats.aggId")
+                ,match(Criteria.where("daysStats.aggId").gte(from).lte(to))
+                ,unwind("daysStats")
+                ,project("daysStats.aggId","daysStats.max")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
 
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("max")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
+    }
     /**
      * Gets the latest average day's value of the filter in selected query
      *
@@ -451,8 +644,27 @@ public class StatsRepository implements IStatsRepository {
      * @return average day's value
      */
     @Override
-    public Iterable<BigDecimal> getDaysAvg(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getDaysAvg(String queryId, String from, String to) {
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.ASC, "daysStats.aggId")
+                ,match(Criteria.where("daysStats.aggId").gte(from).lte(to))
+                ,unwind("daysStats")
+                ,project("daysStats.aggId","daysStats.avg")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("avg")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 
     /**
@@ -490,7 +702,26 @@ public class StatsRepository implements IStatsRepository {
      * @return median day's value
      */
     @Override
-    public Iterable<BigDecimal> getDaysMedian(String queryId, String from, String to) {
-        return null;
+    public Map<String, BigDecimal> getDaysMedian(String queryId, String from, String to){
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,sort(Sort.Direction.ASC, "daysStats.aggId")
+                ,match(Criteria.where("daysStats.aggId").gte(from).lte(to))
+                ,unwind("daysStats")
+                ,project("daysStats.aggId","daysStats.median")
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if(result != null && !result.isEmpty()){
+            return result.stream().collect(CollectorsHelper.toLinkedMap(
+                    k -> (String)k.get("aggId"),
+                    v -> new BigDecimal((String)v.get("median")))
+            );
+        }
+
+        return Collections.singletonMap(to,new BigDecimal("0"));
     }
 }

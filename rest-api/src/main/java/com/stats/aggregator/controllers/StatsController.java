@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Provides statistic data for stored user queries
@@ -48,7 +49,7 @@ public class StatsController {
      * @param queryId query to filter by
      * @param from time span from
      * @param to time span to
-     * @return min value
+     * @return min values in selected range. Format: ddMMyyyy=value
      */
     @ApiOperation(value = "Gets the minimal values of filter in selected query, between two dates",
             response = BigDecimal.class, responseContainer = "List",
@@ -60,7 +61,7 @@ public class StatsController {
                                      @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
                                      @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
-        ServiceResult<Iterable<BigDecimal>> result = statsService.getMin(aggregationType, queryId, from, to);
+        ServiceResult<Map<String, BigDecimal>> result = statsService.getMin(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -83,7 +84,7 @@ public class StatsController {
      * @param queryId query to filter by
      * @param from time span from
      * @param to time span to
-     * @return max value
+     * @return max values in selected range. Format: ddMMyyyy=value
      */
     @ApiOperation(value = "Gets the maximal values of filter in selected query, between two dates",
             response = BigDecimal.class, responseContainer = "List",
@@ -95,7 +96,7 @@ public class StatsController {
                                      @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
                                      @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
-        ServiceResult<Iterable<BigDecimal>> result = statsService.getMax(aggregationType, queryId, from, to);
+        ServiceResult<Map<String, BigDecimal>> result = statsService.getMax(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -118,7 +119,7 @@ public class StatsController {
      * @param queryId query to filter by
      * @param from time span from
      * @param to time span to
-     * @return average value
+     * @return average values in selected range. Format: ddMMyyyy=value
      */
     @ApiOperation(value = "Gets the average values of filter in selected query, between two dates",
             response = BigDecimal.class, responseContainer = "List",
@@ -130,7 +131,7 @@ public class StatsController {
                                      @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
                                      @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
-        ServiceResult<Iterable<BigDecimal>> result = statsService.getAvg(aggregationType, queryId, from, to);
+        ServiceResult<Map<String, BigDecimal>> result = statsService.getAvg(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 
@@ -153,7 +154,7 @@ public class StatsController {
      * @param queryId query to filter by
      * @param from time span from
      * @param to time span to
-     * @return median value
+     * @return median values in selected range. Format: ddMMyyyy=value
      */
     @ApiOperation(value = "Gets the median value of filter in selected query, between two dates",
             response = BigDecimal.class, responseContainer = "List",
@@ -165,7 +166,7 @@ public class StatsController {
                                         @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
                                     @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
                                         @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
-        ServiceResult<Iterable<BigDecimal>> result = statsService.getMedian(aggregationType, queryId, from, to);
+        ServiceResult<Map<String, BigDecimal>> result = statsService.getMedian(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 }

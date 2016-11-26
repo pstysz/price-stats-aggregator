@@ -13,10 +13,10 @@ public class BaseStats {
     protected BigDecimal median;
 
     public BaseStats() {
-        this.setMin(new BigDecimal("1"));
-        this.setMax(new BigDecimal("1"));
-        this.setAvg(new BigDecimal("1"));
-        this.setMedian(new BigDecimal("1"));
+        this.setMin(new BigDecimal("0"));
+        this.setMax(new BigDecimal("0"));
+        this.setAvg(new BigDecimal("0"));
+        this.setMedian(new BigDecimal("0"));
     }
 
     public BaseStats(String aggId) {

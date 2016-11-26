@@ -58,7 +58,11 @@ public class FilterQuery {
 
             int currDay = now.get(Calendar.DAY_OF_MONTH);
             int lastDayInMonth = now.getActualMaximum(Calendar.DAY_OF_MONTH);
-            setDaysStats(new ArrayList<>(lastDayInMonth - currDay + 1));
+
+            if(this.daysStats == null || this.daysStats.isEmpty()) {
+                setDaysStats(new ArrayList<>(now.getMaximum(Calendar.DAY_OF_YEAR) - now.get(Calendar.DAY_OF_YEAR) + 1));
+            }
+
             for(int j = currDay; j <= lastDayInMonth; j++){
                 String dayAggId = monthAggId.concat(String.format("%02d", j));
 
