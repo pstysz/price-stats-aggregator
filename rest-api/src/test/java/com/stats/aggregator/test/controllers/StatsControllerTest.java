@@ -14,6 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,15 +46,137 @@ public class StatsControllerTest {
     public void testGetLatestMinForYearAggregation() throws Exception {
         final String aggregationType = "YEAR";
         final String queryId = "1";
-        final String resultForQueryEq1 = "1";
-        when(statsService.getMin(aggregationType, queryId)).thenReturn(new ServiceResult<>(new BigDecimal(resultForQueryEq1)));
+        final String queryResult = "1";
+        when(statsService.getMin(aggregationType, queryId)).thenReturn(new ServiceResult<>(new BigDecimal(queryResult)));
 
         mockMvc.perform(
-                get(String.format("/api/stats/min/%s/%s", queryId, aggregationType))                )
+                get(String.format("/api/stats/min/%s/%s", queryId, aggregationType)))
                 .andDo(print())
-                .andExpect(jsonPath("$.result").value(resultForQueryEq1));
+                .andExpect(jsonPath("$.result").value(queryResult));
 
-        verify(statsService, atLeastOnce()).getMin(aggregationType, queryId);
+        verify(statsService, times(1)).getMin(aggregationType, queryId);
+    }
+
+    @Test
+    public void testGetRangeMinForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String from = "2015-01-01";
+        final String to = "2016-01-01";
+        final String key = "2016";
+        final String value = "1";
+        final Map<String, BigDecimal> resultForQuery = Collections.singletonMap(key ,new BigDecimal(value));
+        when(statsService.getMin(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to))).thenReturn(new ServiceResult<>(resultForQuery));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/min-range/%s/%s?from=%s&to=%s", queryId, aggregationType, from, to)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result" + "." + key).value(value));
+
+        verify(statsService, times(1)).getMin(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to));
+    }
+
+    @Test
+    public void testGetLatestMaxForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String queryResult = "1";
+        when(statsService.getMax(aggregationType, queryId)).thenReturn(new ServiceResult<>(new BigDecimal(queryResult)));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/max/%s/%s", queryId, aggregationType)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result").value(queryResult));
+
+        verify(statsService, times(1)).getMax(aggregationType, queryId);
+    }
+
+    @Test
+    public void testGetRangeMaxForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String from = "2015-01-01";
+        final String to = "2016-01-01";
+        final String key = "2016";
+        final String value = "1";
+        final Map<String, BigDecimal> resultForQuery = Collections.singletonMap(key ,new BigDecimal(value));
+        when(statsService.getMax(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to))).thenReturn(new ServiceResult<>(resultForQuery));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/max-range/%s/%s?from=%s&to=%s", queryId, aggregationType, from, to)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result" + "." + key).value(value));
+
+        verify(statsService, times(1)).getMax(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to));
+    }
+
+
+    @Test
+    public void testGetLatestAvgForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String queryResult = "1";
+        when(statsService.getAvg(aggregationType, queryId)).thenReturn(new ServiceResult<>(new BigDecimal(queryResult)));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/avg/%s/%s", queryId, aggregationType)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result").value(queryResult));
+
+        verify(statsService, times(1)).getAvg(aggregationType, queryId);
+    }
+
+    @Test
+    public void testGetRangeAvgForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String from = "2015-01-01";
+        final String to = "2016-01-01";
+        final String key = "2016";
+        final String value = "1";
+        final Map<String, BigDecimal> resultForQuery = Collections.singletonMap(key ,new BigDecimal(value));
+        when(statsService.getAvg(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to))).thenReturn(new ServiceResult<>(resultForQuery));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/avg-range/%s/%s?from=%s&to=%s", queryId, aggregationType, from, to)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result" + "." + key).value(value));
+
+        verify(statsService, times(1)).getAvg(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to));
+    }
+
+    @Test
+    public void testGetLatestMedianForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String queryResult = "1";
+        when(statsService.getMedian(aggregationType, queryId)).thenReturn(new ServiceResult<>(new BigDecimal(queryResult)));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/median/%s/%s", queryId, aggregationType)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result").value(queryResult));
+
+        verify(statsService, times(1)).getMedian(aggregationType, queryId);
+    }
+
+    @Test
+    public void testGetRangeMedianForYearAggregation() throws Exception {
+        final String aggregationType = "YEAR";
+        final String queryId = "1";
+        final String from = "2015-01-01";
+        final String to = "2016-01-01";
+        final String key = "2016";
+        final String value = "1";
+        final Map<String, BigDecimal> resultForQuery = Collections.singletonMap(key ,new BigDecimal(value));
+        when(statsService.getMedian(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to))).thenReturn(new ServiceResult<>(resultForQuery));
+
+        mockMvc.perform(
+                get(String.format("/api/stats/median-range/%s/%s?from=%s&to=%s", queryId, aggregationType, from, to)))
+                .andDo(print())
+                .andExpect(jsonPath("$.result" + "." + key).value(value));
+
+        verify(statsService, times(1)).getMedian(aggregationType, queryId, LocalDate.parse(from), LocalDate.parse(to));
     }
 
 //    @Test(expected = NumberFormatException.class)

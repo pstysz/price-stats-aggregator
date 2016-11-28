@@ -58,9 +58,9 @@ public class StatsController {
     public ResponseEntity getMin(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
                                  @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                  @RequestParam(required=false) @ApiParam(value = "time span from", required = false)
-                                     @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
-                                     @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to){
         ServiceResult<Map<String, BigDecimal>> result = statsService.getMin(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
@@ -93,9 +93,9 @@ public class StatsController {
     public ResponseEntity getMax(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
                                  @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                  @RequestParam(required=false) @ApiParam(value = "time span from", required = false) 
-                                     @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
-                                     @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to){
         ServiceResult<Map<String, BigDecimal>> result = statsService.getMax(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
@@ -128,9 +128,9 @@ public class StatsController {
     public ResponseEntity getAvg(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
                                  @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                  @RequestParam(required=false) @ApiParam(value = "time span from", required = false)
-                                     @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
                                  @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
-                                     @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to){
         ServiceResult<Map<String, BigDecimal>> result = statsService.getAvg(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
@@ -163,9 +163,9 @@ public class StatsController {
     public ResponseEntity getMedian(@PathVariable @ApiParam(value = "query to filter by", required = true) String queryId,
                                     @PathVariable @ApiParam(value = "type of aggregation eg. 'DAY', 'MONTH', 'YEAR'") String aggregationType,
                                     @RequestParam(required=false) @ApiParam(value = "time span from", required = false)
-                                        @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate from,
+                                        @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
                                     @RequestParam(required=false) @ApiParam(value = "time span to", required = false)
-                                        @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate to){
+                                        @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to){
         ServiceResult<Map<String, BigDecimal>> result = statsService.getMedian(aggregationType, queryId, from, to);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
