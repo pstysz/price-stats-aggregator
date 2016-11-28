@@ -21,7 +21,6 @@ public class RestAppInit extends AbstractAnnotationConfigDispatcherServletInitia
         return new Class<?>[]{
                  DatabaseConfig.class
                 ,RepositoryConfig.class
-                ,AsyncConfig.class
                 ,SecurityConfig.class
         };
     }
