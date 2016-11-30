@@ -2,7 +2,10 @@ package com.stats.aggregator.common.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * Helper methods for static properties/resources
@@ -42,7 +45,20 @@ public final class PropertiesHelper {
 
     private static void initializer(Properties prop) throws  IOException{
 
-        String[] resources = {"db", "sensitive", "webapi"};
+        String[] commonResources = {"sensitive", "webapi"};
+        String[] devEnvResources = {"db"};
+        String[] prodEnvResources = {"prod-db"};
+        String envType = System.getProperty("env");
+        String[] resources;
+
+        if(Objects.equals(envType, "prod")){
+            resources = Stream.concat(Arrays.stream(commonResources), Arrays.stream(prodEnvResources))
+                    .toArray(String[]::new);
+        }
+        else {
+            resources = Stream.concat(Arrays.stream(commonResources), Arrays.stream(devEnvResources))
+                    .toArray(String[]::new);
+        }
 
         for(String res : resources){
             InputStream loadedProp = PropertiesHelper.class.getClassLoader().getResourceAsStream(res.concat(".properties"));

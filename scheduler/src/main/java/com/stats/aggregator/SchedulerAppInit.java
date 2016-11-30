@@ -2,27 +2,12 @@ package com.stats.aggregator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-public class SchedulerAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
-
+@ComponentScan({"com.stats.aggregator.config", "com.stats.aggregator.scheduler.tasks"})
+public class SchedulerAppInit {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(SchedulerAppInit.class, args);
-    }
-
-    @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[] { };
-    }
-
-    @Override
-    protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] { };
-    }
-
-    @Override
-    protected String[] getServletMappings() {
-        return new String[] { "/" };
     }
 }
