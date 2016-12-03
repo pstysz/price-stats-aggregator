@@ -45,7 +45,7 @@ public final class PropertiesHelper {
 
     private static void initializer(Properties prop) throws  IOException{
 
-        String[] commonResources = {"sensitive", "webapi"};
+        String[] commonResources = {"sensitive", "webapi", "rest-api"};
         String[] devEnvResources = {"db"};
         String[] prodEnvResources = {"prod-db"};
         String envType = System.getProperty("env");
