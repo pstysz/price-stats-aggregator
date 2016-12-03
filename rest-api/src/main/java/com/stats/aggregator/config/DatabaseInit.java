@@ -55,5 +55,14 @@ public final class DatabaseInit {
             testAuthKey.setUser(testUser);
             mongoTemplate.save(testAuthKey);
         }
+
+        if (!mongoTemplate.exists(Query.query(Criteria.where("id").is("0f46592155e18d198383468fddc7dc2a")), AuthorizationKey.class)) {
+            AuthorizationKey testAuthKey = new AuthorizationKey("0f46592155e18d198383468fddc7dc2a");
+            User testUser = new User(PropertiesHelper.getProperty("db.scheduler.name"), PropertiesHelper.getProperty("db.scheduler.pass"));
+            testUser.getAuthorizationKeys().add(testAuthKey);
+            mongoTemplate.save(testUser);
+            testAuthKey.setUser(testUser);
+            mongoTemplate.save(testAuthKey);
+        }
     }
 }

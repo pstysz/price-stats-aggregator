@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -723,5 +725,39 @@ public class StatsRepository implements IStatsRepository {
         }
 
         return Collections.singletonMap(to,new BigDecimal("0"));
+    }
+
+    /**
+     * Gets list of all prices, for current hour, filtered by selected query
+     *
+     * @param queryId query with prices list
+     * @param hourId hour id to filter by; Format: yyyyMMddHH
+     * @return list of prices
+     */
+    @Override
+    public List<BigDecimal> getPriceValues(String queryId, String hourId) {
+        String dayId = hourId.substring(0, 8);
+
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("_id").is(queryId))
+                ,project("daysStats").andExclude("_id")
+                ,unwind("daysStats")
+                ,match(Criteria.where("daysStats.aggId").is(dayId))
+                ,unwind("daysStats.values")
+                ,match(Criteria.where("daysStats.values.aggId").is(hourId))
+                ,project("daysStats.values.values")
+                ,unwind("values.values")
+                ,project("values.values")
+
+        );
+        List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
+                .getMappedResults();
+
+        if (result != null && !result.isEmpty()) {
+            return result.stream()
+                    .map(x -> new BigDecimal((String)x.get("values")))
+                    .collect(Collectors.toCollection(LinkedList::new));
+        }
+        return new LinkedList<>();
     }
 }

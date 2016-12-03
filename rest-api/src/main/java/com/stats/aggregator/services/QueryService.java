@@ -1,10 +1,13 @@
 package com.stats.aggregator.services;
 
-import com.stats.aggregator.DTOs.Filter;
-import com.stats.aggregator.DTOs.FilterQuery;
+import com.stats.aggregator.DTOs.*;
+import com.stats.aggregator.DTOs.enums.PriceType;
+import com.stats.aggregator.common.enums.ErrorMsg;
 import com.stats.aggregator.repositories.contracts.ICounterRepository;
 import com.stats.aggregator.repositories.contracts.IQueryRepository;
+import com.stats.aggregator.repositories.contracts.IStatsRepository;
 import com.stats.aggregator.services.contracts.IQueryService;
+import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,17 +16,27 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 @Service
 public class QueryService implements IQueryService {
 
     private final IQueryRepository queryRepository;
     private final ICounterRepository counterRepository;
+    private final IWebApiProxyService webApiProxyService;
+    private final IStatsRepository statsRepository;
     private Logger logger = LogManager.getLogger(QueryService.class);
 
     @Autowired
-    public QueryService(ICounterRepository counterRepository, IQueryRepository queryRepository) {
+    public QueryService(ICounterRepository counterRepository, IQueryRepository queryRepository,
+                        IWebApiProxyService webApiProxyService, IStatsRepository statsRepository) {
         this.queryRepository = queryRepository;
         this.counterRepository = counterRepository;
+        this.webApiProxyService = webApiProxyService;
+        this.statsRepository = statsRepository;
     }
 
     /**
@@ -129,6 +142,70 @@ public class QueryService implements IQueryService {
                 logger.warn(e);
             }
             return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Gets list of all prices filtered by selected query
+     *
+     * @param queryId query with filters list
+     * @return list of prices
+     */
+    @Override
+    public ServiceResult<List<BigDecimal>> getPrices(String queryId) {
+        try {
+            FilterQuery filterQuery = queryRepository.findOne(queryId);
+            if (filterQuery == null) {
+                return new ServiceResult<>(HttpStatus.NOT_FOUND);
+            }
+
+            if (filterQuery.getFilters().length == 0) {
+                return new ServiceResult<>(HttpStatus.BAD_REQUEST, ErrorMsg.FILTER_LIST_EMPTY.toString());
+            }
+
+            String currHourId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH"));
+            List<BigDecimal> priceValues = statsRepository.getPriceValues(queryId, currHourId);
+
+            if (priceValues != null && !priceValues.isEmpty()) {
+                return new ServiceResult<>(priceValues);
+            }
+
+            ServiceResult<AuctionsList> auctionsListResult = webApiProxyService.getAuctions(filterQuery.getFilters());
+
+            if (!auctionsListResult.isSuccess()) {
+                return new ServiceResult<>(auctionsListResult);
+            }
+
+            List<AuctionItem> auctionItems = auctionsListResult.getResult().getAuctionItems();
+            for (AuctionItem item : auctionItems) {
+                OptionalDouble highestPrice = item.getPrices().stream()
+                        .filter(x -> x.getType() != PriceType.BIDDING && x.getType() != PriceType.UNKNOWN)
+                        .mapToDouble(Price::getValue)
+                        .max();
+
+                if (highestPrice.isPresent()) {
+                    priceValues.add(new BigDecimal(highestPrice.getAsDouble()));
+                }
+            }
+
+            if (priceValues != null && !priceValues.isEmpty()) {
+                filterQuery.getDaysStats().stream()
+                        .filter(x -> Objects.equals(x.getAggId(), currHourId.substring(0, 8)))
+                        .findAny()
+                        .ifPresent(dayStats -> dayStats.getValues().stream()
+                                .filter(x -> Objects.equals(x.getAggId(), currHourId))
+                                .forEach(x -> x.setValues(priceValues)));
+
+                queryRepository.save(filterQuery);
+            }
+
+            return new ServiceResult<>(priceValues);
+        }
+        catch (DataAccessException e){
+                if(logger.isWarnEnabled()){
+                    logger.warn(e);
+                }
+                return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

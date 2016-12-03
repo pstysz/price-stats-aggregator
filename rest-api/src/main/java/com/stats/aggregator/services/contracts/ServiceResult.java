@@ -58,6 +58,14 @@ public class ServiceResult<TResult> {
         this.getErrorDescriptions().add(message);
     }
 
+    public ServiceResult(ServiceResult result){
+        this();
+        this.isSuccess = result.isSuccess();
+        this.status = result.getStatus();
+        this.exception = result.getException();
+        this.errorDescriptions = result.getErrorDescriptions();
+    }
+
     public TResult getResult() {
         return result;
     }

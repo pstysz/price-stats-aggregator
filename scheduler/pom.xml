@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>hadoop</artifactId>
+	<artifactId>scheduler</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>hadoop</name>
-	<description>Demo project for Spring Boot</description>
+	<name>scheduler</name>
+	<description>Scheduler application for stats aggregator</description>
 
     <parent>
         <groupId>com.stats.aggregator</groupId>
@@ -64,6 +64,32 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>2.6.0-mr1-cdh5.9.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.scalaj/scalaj-http_2.11 -->
+        <dependency>
+            <groupId>org.scalaj</groupId>
+            <artifactId>scalaj-http_2.11</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.liftweb/lift-json -->
+        <dependency>
+            <groupId>net.liftweb</groupId>
+            <artifactId>lift-json</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stats.aggregator</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stats.aggregator</groupId>
+            <artifactId>data-objects</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

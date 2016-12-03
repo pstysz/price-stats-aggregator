@@ -1,6 +1,7 @@
 package com.stats.aggregator.repositories.contracts;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -203,4 +204,13 @@ public interface IStatsRepository  {
      * @return median day's value
      */
     Map<String, BigDecimal> getDaysMedian(String queryId, String from, String to);
+
+    /**
+     * Gets list of all prices, for current hour, filtered by selected query
+     *
+     * @param queryId query with prices list
+     * @param hourId hour id to filter by; Format: yyyyMMddHH
+     * @return list of prices
+     */
+    List<BigDecimal> getPriceValues(String queryId, String hourId);
 }

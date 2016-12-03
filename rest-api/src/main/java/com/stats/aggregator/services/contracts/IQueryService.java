@@ -3,6 +3,9 @@ package com.stats.aggregator.services.contracts;
 import com.stats.aggregator.DTOs.Filter;
 import com.stats.aggregator.DTOs.FilterQuery;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * Handle actions on user's search params (queries)
  */
@@ -43,4 +46,11 @@ public interface IQueryService {
      * @param queryId id of query to remove
      */
     ServiceResult delete(String queryId);
+
+    /**
+     * Gets list of all prices filtered by selected query
+     * @param queryId query with filters list
+     * @return list of prices
+     */
+    ServiceResult<List<BigDecimal>> getPrices(String queryId);
 }

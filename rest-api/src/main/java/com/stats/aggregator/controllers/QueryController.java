@@ -98,4 +98,16 @@ public class QueryController {
         ServiceResult result = queryService.delete(queryId);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
+
+    /**
+     * Gets list of all prices filtered by selected query
+     * @param queryId query with filters list
+     * @return list of prices
+     */
+    @ApiOperation(value = "Gets list of all prices filtered by selected query", produces = "application/json")
+    @GetMapping(value = "{queryId}/prices", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity getPrices(@PathVariable(required = true) @ApiParam(value = "id of query to filter by", required = true) String queryId){
+        ServiceResult result = queryService.getPrices(queryId);
+        return ResponseEntity.status(result.getStatus()).body(result);
+    }
 }
