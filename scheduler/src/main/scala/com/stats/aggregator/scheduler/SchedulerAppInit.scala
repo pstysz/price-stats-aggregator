@@ -6,12 +6,16 @@ import org.springframework.context.annotation.ComponentScan
 
 
 @SpringBootApplication
-@ComponentScan(Array("com.stats.aggregator.scheduler.config", "com.stats.aggregator.scheduler.tasks", "com.stats.aggregator.scheduler.services"))
+@ComponentScan(Array("com.stats.aggregator.scheduler.config", "com.stats.aggregator.scheduler.tasks",
+  "com.stats.aggregator.scheduler.services", "com.stats.aggregator.scheduler.repo",
+  "com.stats.aggregator.scheduler.hadoop"))
 class AppInit {
 }
 
 @SpringBootApplication
-@ComponentScan(Array("com.stats.aggregator.scheduler.config", "com.stats.aggregator.scheduler.tasks", "com.stats.aggregator.scheduler.services"))
+@ComponentScan(Array("com.stats.aggregator.scheduler.config", "com.stats.aggregator.scheduler.tasks",
+  "com.stats.aggregator.scheduler.services", "com.stats.aggregator.scheduler.repo",
+  "com.stats.aggregator.scheduler.hadoop"))
 object SchedulerAppInit extends App {
   
     override def main(args: Array[String]): Unit = {

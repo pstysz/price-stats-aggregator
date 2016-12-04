@@ -1,19 +1,19 @@
 package com.stats.aggregator.scheduler.tasks
 
+import com.stats.aggregator.scheduler.hadoop.jobs.HourStatsJob
 import com.stats.aggregator.scheduler.services.contract.TRestApiClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
-@Component class HadoopTask @Autowired()(restApiClient: TRestApiClient) {
+@Component class HadoopTask @Autowired()(restApiClient: TRestApiClient, hourStatsJob: HourStatsJob) {
 
-  @Scheduled(initialDelay=10000, fixedRate=60000) def justForTest() {
-    restApiClient getCurrentPrices "1"
-    // task execution logic
+  @Scheduled(initialDelay=10000, fixedRate=600000) def justForTest() {
+    hourStatsJob.calculate()
   }
 
   @Scheduled(cron = "0 10 * * * *") def doEveryHour() {
-    // task execution logic
+    hourStatsJob.calculate()
   }
 
   @Scheduled(cron = "0 20 23 * * *") def doEveryDay() {

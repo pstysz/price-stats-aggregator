@@ -16,7 +16,7 @@ class RestApiClient extends TRestApiClient{
   implicit val formats = DefaultFormats
 
   /**
-    * Gets list of all prices filtered by selected query
+    * Gets list of all prices, for current hour, filtered by selected query
     *
     * @param queryId query with filters list
     * @return list of prices
