@@ -11,26 +11,31 @@ import org.springframework.stereotype.Component
 /**
   * Calculates stats for every hour
   */
+@throws[IllegalArgumentException]
 @Component
 class HourStatsJob @Autowired()(filterQueryRepository: TFilterQueryRepository, restApiClient: TRestApiClient, statsRepository: TStatsRepository) {
 
   /**
     * Calculates stats for every hour for every valid query in db
+    * @param hourId optional id of hour to calculate stats (current hour default)
     */
-  def calculate() : Unit = {
-    val currHourId = LocalDateTime.now.format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
+  def calculate(hourId: String = null): Unit = {
+    val currHourId = if (hourId == null) LocalDateTime.now.format(DateTimeFormatter.ofPattern("yyyyMMddHH")) else hourId
+    if (currHourId.length != 10) throw new IllegalArgumentException
+
     val ids: Seq[String] = filterQueryRepository.getValidFilterQueryIds
 
     for (id <- ids){
-      val prices = restApiClient.getCurrentPrices(id)
+      val prices: Seq[BigDecimal] = restApiClient.getCurrentPrices(id)
 
       if (prices.nonEmpty) {
         val pricesSorted = prices.sorted
 
         val min: BigDecimal = pricesSorted.head
         val max: BigDecimal = pricesSorted.last
-        val avg: BigDecimal = pricesSorted.sum / pricesSorted.length
-        val _ :: median :: _ = pricesSorted
+        val avg: BigDecimal = pricesSorted.sum / pricesSorted.size
+        val (lower, upper) = pricesSorted.splitAt(pricesSorted.size / 2)
+        val median: BigDecimal = if (pricesSorted.size % 2 == 0) (lower.last + upper.head) / BigDecimal(2) else upper.head
 
         statsRepository.saveHourStats(id, currHourId,
           min.setScale(2, BigDecimal.RoundingMode.HALF_UP),
