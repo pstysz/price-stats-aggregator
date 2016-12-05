@@ -20,20 +20,18 @@ import org.springframework.stereotype.Repository
   override def saveHourStats(queryId: String, hourId: String, min: BigDecimal, max: BigDecimal, avg: BigDecimal, median: BigDecimal = null): Unit = {
     if (hourId.length != 10) return
 
-    // it's totally shitty but I really don't want to redesign the database now, sorry :(
-    val dayNumber = hourId.substring(6, 8).toInt.-(1).toString
+    val dayId = hourId.substring(0, 8).toInt.toString
     val hourNumber = hourId.substring(8, 10).toInt.toString
-
     val update = new Update
-    update.set(s"daysStats.$dayNumber.values.$hourNumber.min", min.bigDecimal)
-    update.set(s"daysStats.$dayNumber.values.$hourNumber.max", max.bigDecimal)
-    update.set(s"daysStats.$dayNumber.values.$hourNumber.avg", avg.bigDecimal)
+    update.set(s"daysStats.$$.hours.$hourNumber.min", min.bigDecimal.toString)
+    update.set(s"daysStats.$$.hours.$hourNumber.max", max.bigDecimal.toString)
+    update.set(s"daysStats.$$.hours.$hourNumber.avg", avg.bigDecimal.toPlainString)
     if (median != null) {
-      update.set(s"daysStats.$dayNumber.values.$hourNumber.median", median.bigDecimal)
+      update.set(s"daysStats.$$.hours.$hourNumber.median", median.bigDecimal.toString)
     }
 
     mongoTemplate.updateFirst(
-      Query.query(Criteria.where("id").is(queryId)),
+      Query.query(Criteria.where("id").is(queryId).and("daysStats.aggId").is(dayId)),
       update,
       classOf[FilterQuery]
     )

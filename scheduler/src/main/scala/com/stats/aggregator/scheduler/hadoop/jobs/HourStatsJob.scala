@@ -1,6 +1,5 @@
 package com.stats.aggregator.scheduler.hadoop.jobs
 
-import java.math.{MathContext, RoundingMode}
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -30,10 +29,14 @@ class HourStatsJob @Autowired()(filterQueryRepository: TFilterQueryRepository, r
 
         val min: BigDecimal = pricesSorted.head
         val max: BigDecimal = pricesSorted.last
-        val avg: BigDecimal = (pricesSorted.sum / pricesSorted.length).round(new MathContext(2, RoundingMode.HALF_UP))
+        val avg: BigDecimal = pricesSorted.sum / pricesSorted.length
         val _ :: median :: _ = pricesSorted
 
-        statsRepository.saveHourStats(id, currHourId, min, max, avg, median)
+        statsRepository.saveHourStats(id, currHourId,
+          min.setScale(2, BigDecimal.RoundingMode.HALF_UP),
+          max.setScale(2, BigDecimal.RoundingMode.HALF_UP),
+          avg.setScale(2, BigDecimal.RoundingMode.HALF_UP),
+          median.setScale(2, BigDecimal.RoundingMode.HALF_UP))
       }
     }
   }

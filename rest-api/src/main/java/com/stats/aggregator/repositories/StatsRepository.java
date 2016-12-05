@@ -1,8 +1,10 @@
 package com.stats.aggregator.repositories;
 
 import com.mongodb.DBObject;
+import com.stats.aggregator.common.enums.ErrorMsg;
 import com.stats.aggregator.common.utils.CollectorsHelper;
 import com.stats.aggregator.repositories.contracts.IStatsRepository;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -735,20 +737,22 @@ public class StatsRepository implements IStatsRepository {
      * @return list of prices
      */
     @Override
-    public List<BigDecimal> getPriceValues(String queryId, String hourId) {
+    public List<BigDecimal> getPriceValues(String queryId, String hourId) throws InvalidArgumentException {
+        if(hourId.length() != 10) throw new InvalidArgumentException( new String[]{String.format(ErrorMsg.INVALID_PARAMETER.toString(), hourId)});
+
         String dayId = hourId.substring(0, 8);
+        String hourNumber = Integer.valueOf(hourId.substring(8, 10)).toString();
 
         Aggregation aggregation = newAggregation(
                 match(Criteria.where("_id").is(queryId))
                 ,project("daysStats").andExclude("_id")
                 ,unwind("daysStats")
                 ,match(Criteria.where("daysStats.aggId").is(dayId))
-                ,unwind("daysStats.values")
+                ,unwind("daysStats.hours")
                 ,match(Criteria.where("daysStats.values.aggId").is(hourId))
-                ,project("daysStats.values.values")
-                ,unwind("values.values")
-                ,project("values.values")
-
+                ,project("daysStats.hours." + hourNumber + ".values") //ToDo: refactor me
+                ,unwind("hours." + hourNumber + ".values")
+                ,project("hours." + hourNumber + ".values")
         );
         List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
                 .getMappedResults();

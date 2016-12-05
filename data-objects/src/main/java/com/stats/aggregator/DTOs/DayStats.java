@@ -1,36 +1,36 @@
 package com.stats.aggregator.DTOs;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class DetailedStats<T> extends BaseStats {
-    protected List<T> values;
+public class DayStats<T> extends BaseStats {
+    protected Map<String, DetailedStats<T>> hours;
 
-    public DetailedStats() {
-        this.values =new ArrayList<>(1);
+    public DayStats() {
+        this.hours =new LinkedHashMap<>(1);
     }
 
-    public DetailedStats(String aggId) {
+    public DayStats(String aggId) {
         super(aggId);
-        this.values =new ArrayList<>(1);
+        this.hours =new LinkedHashMap<>(1);
     }
 
-    public DetailedStats(String aggId, int valuesCount) {
+    public DayStats(String aggId, int hoursCount) {
         super(aggId);
-        this.values =new ArrayList<>(valuesCount);
+        this.hours =new LinkedHashMap<>(hoursCount);
     }
 
-    public DetailedStats(List<T> values) {
-        this.setValues(values);
+    public DayStats(Map<String, DetailedStats<T>> hours) {
+        this.setHours(hours);
     }
 
-    public List<T> getValues() {
-        return values;
+    public Map<String, DetailedStats<T>> getHours() {
+        return hours;
     }
 
-    public void setValues(List<T> values) {
-        this.values = values;
+    public void setHours(Map<String, DetailedStats<T>> hours) {
+        this.hours = hours;
     }
 
     public BigDecimal getMin() {

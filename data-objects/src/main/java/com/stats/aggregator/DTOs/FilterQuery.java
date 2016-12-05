@@ -16,7 +16,7 @@ public class FilterQuery {
     private Filter[] filters;
     private List<BaseStats> yearsStats;
     private List<BaseStats> monthsStats;
-    private List<DetailedStats<DetailedStats<BigDecimal>>> daysStats;
+    private List<DayStats<BigDecimal>> daysStats;
 
     public String getId() {
         return id;
@@ -68,10 +68,10 @@ public class FilterQuery {
 
                 int currHour = now.get(Calendar.HOUR_OF_DAY);
                 int noOfHoursLeft = 24 - currHour;
-                DetailedStats<DetailedStats<BigDecimal>> day = new DetailedStats<>(dayAggId, noOfHoursLeft);
+                DayStats<BigDecimal> day = new DayStats<>(dayAggId, noOfHoursLeft);
                 for(int k = currHour; k < 24; k++){
                     String hourAggId = dayAggId.concat(String.format("%02d", k));
-                    day.getValues().add(new DetailedStats<>(hourAggId));
+                    day.getHours().put(Integer.toString(k), new DetailedStats<>(hourAggId));
                 }
 
                 this.daysStats.add(day);
@@ -107,11 +107,11 @@ public class FilterQuery {
         this.monthsStats = monthsStats;
     }
 
-    public List<DetailedStats<DetailedStats<BigDecimal>>> getDaysStats() {
+    public List<DayStats<BigDecimal>> getDaysStats() {
         return daysStats;
     }
 
-    public void setDaysStats(List<DetailedStats<DetailedStats<BigDecimal>>> daysStats) {
+    public void setDaysStats(List<DayStats<BigDecimal>> daysStats) {
         this.daysStats = daysStats;
     }
 }

@@ -9,6 +9,7 @@ import com.stats.aggregator.repositories.contracts.IStatsRepository;
 import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,23 +190,30 @@ public class QueryService implements IQueryService {
             }
 
             if (priceValues != null && !priceValues.isEmpty()) {
+                String dayId = currHourId.substring(0, 8);
+                String hourNumber = Integer.valueOf(currHourId.substring(8, 10)).toString();
+
+                // I just wanted to play with lambdas a little bit, don't hate me :)
                 filterQuery.getDaysStats().stream()
-                        .filter(x -> Objects.equals(x.getAggId(), currHourId.substring(0, 8)))
+                        .filter(x -> Objects.equals(x.getAggId(), dayId))
                         .findAny()
-                        .ifPresent(dayStats -> dayStats.getValues().stream()
-                                .filter(x -> Objects.equals(x.getAggId(), currHourId))
-                                .forEach(x -> x.setValues(priceValues)));
+                        .ifPresent((dayStats) -> dayStats.getHours()
+                                .computeIfPresent(hourNumber, (k, v) -> {
+                                    v.setValues(priceValues);
+                                    return v;
+                                })
+                        );
 
                 queryRepository.save(filterQuery);
             }
 
             return new ServiceResult<>(priceValues);
         }
-        catch (DataAccessException e){
-                if(logger.isWarnEnabled()){
-                    logger.warn(e);
-                }
-                return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        catch (DataAccessException | InvalidArgumentException e){
+            if(logger.isWarnEnabled()){
+                logger.warn(e);
+            }
+            return new ServiceResult<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

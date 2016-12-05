@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component class HadoopTask @Autowired()(restApiClient: TRestApiClient, hourStatsJob: HourStatsJob) {
 
   @Scheduled(initialDelay=10000, fixedRate=600000) def justForTest() {
-    hourStatsJob.calculate()
+
   }
 
   @Scheduled(cron = "0 10 * * * *") def doEveryHour() {
