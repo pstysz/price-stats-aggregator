@@ -13,10 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -748,18 +745,15 @@ public class StatsRepository implements IStatsRepository {
                 ,project("daysStats").andExclude("_id")
                 ,unwind("daysStats")
                 ,match(Criteria.where("daysStats.aggId").is(dayId))
-                ,unwind("daysStats.hours")
-                ,match(Criteria.where("daysStats.values.aggId").is(hourId))
-                ,project("daysStats.hours." + hourNumber + ".values") //ToDo: refactor me
-                ,unwind("hours." + hourNumber + ".values")
-                ,project("hours." + hourNumber + ".values")
+                ,project().andExclude("_id").and("daysStats.hours." + hourNumber + ".values").as("value")
+                ,unwind("value")
         );
         List<DBObject> result = mongoTemplate.aggregate(aggregation, "filter_queries", DBObject.class)
                 .getMappedResults();
 
         if (result != null && !result.isEmpty()) {
             return result.stream()
-                    .map(x -> new BigDecimal((String)x.get("values")))
+                    .map(x -> new BigDecimal((String)x.get("value")))
                     .collect(Collectors.toCollection(LinkedList::new));
         }
         return new LinkedList<>();

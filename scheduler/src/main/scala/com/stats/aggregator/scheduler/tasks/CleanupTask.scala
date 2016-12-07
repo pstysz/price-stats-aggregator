@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component
   */
 @Component class CleanupTask @Autowired()(accountRepository: TAccountRepository) {
 
-
+  /**
+    * Task runs every day at midnight
+    */
   @Scheduled(cron = "0 0 0 * * *") def doEveryDay() {
     accountRepository.removeExpiredAuthKeys()
   }

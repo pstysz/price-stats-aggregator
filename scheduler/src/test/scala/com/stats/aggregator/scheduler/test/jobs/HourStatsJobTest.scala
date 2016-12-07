@@ -11,7 +11,9 @@ import org.mockito.Mockito._
 import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
 
-
+/**
+  * Tests HourStatsJob class
+  */
 class HourStatsJobTest extends FlatSpec with MockitoSugar {
 
   def fixture =

@@ -1,7 +1,7 @@
 package com.stats.aggregator.scheduler.repo.contract
 
 /**
-  * Handles db operations on stats values
+  * Handles all actions on statistic data
   */
 trait TStatsRepository {
   /**
@@ -43,4 +43,11 @@ trait TStatsRepository {
     * @param median median price value to save
     */
   def saveYearStats(queryId: String, yearId: String, min: BigDecimal, max: BigDecimal, avg: BigDecimal, median: BigDecimal = null) : Unit
+
+  /**
+    * Aggregate and calculate stats for passed day
+    * @param queryId filter query with data to calculate
+    * @param dayId day for which stats should be calculated (default today)
+    */
+  def calculateDayStats(queryId: String, dayId: String = null): Unit
 }

@@ -1,6 +1,8 @@
 package com.stats.aggregator.scheduler.services.contract
 
-
+/**
+  * Proxy service to connect to Rest API methods
+  */
 trait TRestApiClient {
 
   /**
