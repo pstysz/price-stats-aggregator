@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.mapreduce.{MapReduceOptions, MapRed
 import org.springframework.data.mongodb.core.query.{Criteria, Query, Update}
 import org.springframework.stereotype.Repository
 
+import scala.language.implicitConversions
+
 /**
   * Handles all actions on statistic data
   */
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Repository
 
   // implicit casting
   implicit val formats = DefaultFormats
-  private implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
   private implicit def bigDecimalToString(value: BigDecimal) : String = value.bigDecimal.toPlainString
   private implicit def parseResultToStatsContainer(valueResults: MapReduceResults[ValueObject]) : CalculatedStatsContainer =
     if(valueResults.iterator.hasNext) parse(valueResults.iterator.next.value).extract[CalculatedStatsContainer] else null
@@ -36,8 +37,8 @@ import org.springframework.stereotype.Repository
   override def saveHourStats(queryId: String, hourId: String, min: BigDecimal, max: BigDecimal, avg: BigDecimal, median: BigDecimal = null): Unit = {
     if (hourId.length != 10) return
 
-    val dayId = hourId.substring(0, 8).toShortExact.toString
-    val hourNumber = hourId.substring(8, 10).toShortExact.toString
+    val dayId = hourId.substring(0, 8).toInt.toString
+    val hourNumber = hourId.substring(8, 10).toInt.toString
     val update = new Update
     update.set(s"daysStats.$$.hours.$hourNumber.min", min.bigDecimal.toString)
     update.set(s"daysStats.$$.hours.$hourNumber.max", max.bigDecimal.toString)
@@ -140,6 +141,7 @@ import org.springframework.stereotype.Repository
     * @param dayId day for which stats should be calculated (default today)
     */
   def calculateDayStats(queryId: String, dayId: String = null): Unit = {
+
     val dayToCalcId = if (dayId == null) LocalDate.now.format(DateTimeFormatter.ofPattern("yyyyMMdd")) else dayId
     if (dayToCalcId.length != 8) throw new IllegalArgumentException
 
@@ -155,6 +157,7 @@ import org.springframework.stereotype.Repository
       classOf[ValueObject])
 
     if (result != null){
+      implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
       this.saveDayStats(queryId, dayToCalcId, result.min, result.max, result.avg, result.median)
     }
   }
@@ -180,6 +183,7 @@ import org.springframework.stereotype.Repository
       classOf[ValueObject])
 
     if (result != null){
+      implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
       this.saveMonthStats(queryId, monthToCalcId, result.min, result.max, result.avg, result.median)
     }
   }
@@ -205,6 +209,7 @@ import org.springframework.stereotype.Repository
       classOf[ValueObject])
 
     if (result != null){
+      implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
       this.saveYearStats(queryId, yearToCalcId, result.min, result.max, result.avg, result.median)
     }
   }

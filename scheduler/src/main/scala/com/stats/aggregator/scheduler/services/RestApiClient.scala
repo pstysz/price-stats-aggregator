@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 
 import scalaj.http._
 import net.liftweb.json._
+import scala.language.implicitConversions
 
 /**
   * Proxy service to connect to Rest API methods
