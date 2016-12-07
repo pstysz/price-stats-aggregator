@@ -1,7 +1,6 @@
 package com.stats.aggregator.repositories.contracts;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
+import java.lang.IllegalArgumentException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -214,5 +213,5 @@ public interface IStatsRepository  {
      * @param hourId hour id to filter by; Format: yyyyMMddHH
      * @return list of prices
      */
-    List<BigDecimal> getPriceValues(String queryId, String hourId) throws InvalidArgumentException;
+    List<BigDecimal> getPriceValues(String queryId, String hourId) throws IllegalArgumentException;
 }

@@ -9,5 +9,4 @@ trait TAccountRepository {
     * Removes expired user authorization keys from db
     */
   def removeExpiredAuthKeys() : Unit
-
 }

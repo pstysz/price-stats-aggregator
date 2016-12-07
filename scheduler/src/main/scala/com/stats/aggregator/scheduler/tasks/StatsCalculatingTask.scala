@@ -1,6 +1,6 @@
 package com.stats.aggregator.scheduler.tasks
 
-import com.stats.aggregator.scheduler.hadoop.jobs.HourStatsJob
+import com.stats.aggregator.scheduler.jobs.{DayStatsJob, HourStatsJob, MonthStatsJob, YearStatsJob}
 import com.stats.aggregator.scheduler.services.contract.TRestApiClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -9,10 +9,14 @@ import org.springframework.stereotype.Component
 /**
   * Scheduler. Runs stats calculating jobs every hour, day, month and year
   */
-@Component class StatsCalculatingTask @Autowired()(restApiClient: TRestApiClient, hourStatsJob: HourStatsJob) {
+@Component class StatsCalculatingTask @Autowired()(restApiClient: TRestApiClient,
+                                                   hourStatsJob: HourStatsJob,
+                                                   dayStatsJob: DayStatsJob,
+                                                   monthStatsJob: MonthStatsJob,
+                                                   yearStatsJob: YearStatsJob) {
 
-  @Scheduled(initialDelay=10000, fixedRate=600000) def justForTest() {
-
+  @Scheduled(initialDelay=10000, fixedDelay = 999999999) def justForTestStartsOnceAfter10sec() {
+    //yearStatsJob.calculate()
   }
 
   /**
@@ -23,23 +27,23 @@ import org.springframework.stereotype.Component
   }
 
   /**
-    * Task runs 20 minutes after 23 hour
+    * Task runs everyday, 20 minutes after 23 hour
     */
   @Scheduled(cron = "0 20 23 * * *") def doEveryDay() {
-    // task execution logic
+    dayStatsJob.calculate()
   }
 
   /**
     * Task runs once in a month, at 23:30
     */
   @Scheduled(cron = "0 30 23 1 * *") def doEveryMonth() {
-    // task execution logic
+    monthStatsJob.calculate()
   }
 
   /**
     * Task runs once in a year, at 23:40
     */
   @Scheduled(cron = "0 40 23 1 1 *") def doEveryYear() {
-    // task execution logic
+    yearStatsJob.calculate()
   }
 }

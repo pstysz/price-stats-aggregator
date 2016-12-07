@@ -9,7 +9,6 @@ import com.stats.aggregator.repositories.contracts.IStatsRepository;
 import com.stats.aggregator.services.contracts.IQueryService;
 import com.stats.aggregator.services.contracts.IWebApiProxyService;
 import com.stats.aggregator.services.contracts.ServiceResult;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.lang.IllegalArgumentException;
 
 @Service
 public class QueryService implements IQueryService {
@@ -209,7 +209,7 @@ public class QueryService implements IQueryService {
 
             return new ServiceResult<>(priceValues);
         }
-        catch (DataAccessException | InvalidArgumentException e){
+        catch (DataAccessException | IllegalArgumentException e){
             if(logger.isWarnEnabled()){
                 logger.warn(e);
             }

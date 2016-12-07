@@ -4,7 +4,6 @@ import com.mongodb.DBObject;
 import com.stats.aggregator.common.enums.ErrorMsg;
 import com.stats.aggregator.common.utils.CollectorsHelper;
 import com.stats.aggregator.repositories.contracts.IStatsRepository;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.lang.IllegalArgumentException;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -734,8 +734,8 @@ public class StatsRepository implements IStatsRepository {
      * @return list of prices
      */
     @Override
-    public List<BigDecimal> getPriceValues(String queryId, String hourId) throws InvalidArgumentException {
-        if(hourId.length() != 10) throw new InvalidArgumentException( new String[]{String.format(ErrorMsg.INVALID_PARAMETER.toString(), hourId)});
+    public List<BigDecimal> getPriceValues(String queryId, String hourId) throws IllegalArgumentException {
+        if(hourId.length() != 10) throw new IllegalArgumentException(String.format(ErrorMsg.INVALID_PARAMETER.toString(), hourId));
 
         String dayId = hourId.substring(0, 8);
         String hourNumber = Integer.valueOf(hourId.substring(8, 10)).toString();

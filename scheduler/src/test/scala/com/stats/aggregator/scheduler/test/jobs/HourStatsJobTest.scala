@@ -3,7 +3,7 @@ package com.stats.aggregator.scheduler.test.jobs
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-import com.stats.aggregator.scheduler.hadoop.jobs.HourStatsJob
+import com.stats.aggregator.scheduler.jobs.HourStatsJob
 import com.stats.aggregator.scheduler.repo.contract.{TFilterQueryRepository, TStatsRepository}
 import com.stats.aggregator.scheduler.services.contract.TRestApiClient
 import org.mockito.Mockito._

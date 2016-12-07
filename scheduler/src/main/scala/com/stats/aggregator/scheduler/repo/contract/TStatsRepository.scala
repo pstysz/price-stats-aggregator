@@ -50,4 +50,18 @@ trait TStatsRepository {
     * @param dayId day for which stats should be calculated (default today)
     */
   def calculateDayStats(queryId: String, dayId: String = null): Unit
+
+  /**
+    * Aggregate and calculate stats for passed month
+    * @param queryId filter query with data to calculate
+    * @param monthId month for which stats should be calculated (default current month)
+    */
+  def calculateMonthStats(queryId: String, monthId: String = null): Unit
+
+  /**
+    * Aggregate and calculate stats for passed year
+    * @param queryId filter query with data to calculate
+    * @param yearId year for which stats should be calculated (default current year)
+    */
+  def calculateAnnualStats(queryId: String, yearId: String = null): Unit
 }

@@ -4,9 +4,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import com.stats.aggregator.DTOs.FilterQuery
-import com.stats.aggregator.DTOs.enums.AggregationType
-import com.stats.aggregator.scheduler.repo.contract.TStatsRepository
-import com.sun.beans.decoder.ValueObject
+import com.stats.aggregator.scheduler.repo.contract.{CalculatedStatsContainer, TStatsRepository, ValueObject}
+import net.liftweb.json._
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.mapreduce.{MapReduceOptions, MapReduceResults}
@@ -18,10 +17,12 @@ import org.springframework.stereotype.Repository
   */
 @Repository class StatsRepository @Autowired()(mongoTemplate: MongoTemplate) extends TStatsRepository{
 
-  // implicit casting String <-> BigDecimal
+  // implicit casting
+  implicit val formats = DefaultFormats
   private implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
   private implicit def bigDecimalToString(value: BigDecimal) : String = value.bigDecimal.toPlainString
-
+  private implicit def parseResultToStatsContainer(valueResults: MapReduceResults[ValueObject]) : CalculatedStatsContainer =
+    if(valueResults.iterator.hasNext) parse(valueResults.iterator.next.value).extract[CalculatedStatsContainer] else null
 
   /**
     * Saves stats values to passed object
@@ -116,7 +117,7 @@ import org.springframework.stereotype.Repository
     * @param median median price value to save
     */
   override def saveYearStats(queryId: String, yearId: String, min: BigDecimal, max: BigDecimal, avg: BigDecimal, median: BigDecimal = null): Unit = {
-    if (yearId.length != 6) return
+    if (yearId.length != 4) return
 
     val update = new Update
     update.set("yearsStats.$.min", min.bigDecimal)
@@ -133,52 +134,79 @@ import org.springframework.stereotype.Repository
     )
   }
 
-
   /**
     * Aggregate and calculate stats for passed day
     * @param queryId filter query with data to calculate
     * @param dayId day for which stats should be calculated (default today)
     */
   def calculateDayStats(queryId: String, dayId: String = null): Unit = {
-    val currDayId = if (dayId == null) LocalDate.now.format(DateTimeFormatter.ofPattern("yyyyMMdd")) else dayId
-    if (currDayId.length != 8) throw new IllegalArgumentException
+    val dayToCalcId = if (dayId == null) LocalDate.now.format(DateTimeFormatter.ofPattern("yyyyMMdd")) else dayId
+    if (dayToCalcId.length != 8) throw new IllegalArgumentException
 
-    val query : Query = new Query(Criteria.where("_id").is(queryId).and("daysStats.aggId").is(currDayId))
-    query.fields.include("daysStats.$.hours")
+    val params : java.util.Map[String, Object] =  new java.util.HashMap[String, Object]()
+    params.put("aggId", dayToCalcId)
 
-    val result = this.mapReduce(query, AggregationType.DAY)
+    val result = mongoTemplate.mapReduce(
+      Query.query(Criteria.where("_id").is(queryId)), //.and("daysStats.aggId").is(dayToCalcId)),
+      "filter_queries",
+      "classpath:dayStatsMapper.js",
+      "classpath:statsReducer.js",
+      MapReduceOptions.options().scopeVariables(params).outputCollection("daysStats_out"),
+      classOf[ValueObject])
 
-
-    this.saveDayStats(queryId, currDayId, result.min, result.max, result.avg, result.median)
+    if (result != null){
+      this.saveDayStats(queryId, dayToCalcId, result.min, result.max, result.avg, result.median)
+    }
   }
 
   /**
-    * Wraps standard mapReduce method with some default values for stats aggregating
-    * @param query query to filter input data
-    * @param aggregationType type of the aggregation to calculate, day
-    * @return calculated stats
+    * Aggregate and calculate stats for passed month
+    * @param queryId filter query with data to calculate
+    * @param monthId month for which stats should be calculated (default current month)
     */
-  private def mapReduce(query: Query, aggregationType: AggregationType) : CalculatedStatsContainer = {
-    val containerName = aggregationType match {
-      case AggregationType.DAY => "daysStats"
-      case AggregationType.MONTH => "monthsStats"
-      case AggregationType.YEAR => "yearsStats"
+  def calculateMonthStats(queryId: String, monthId: String = null): Unit = {
+    val monthToCalcId = if (monthId == null) LocalDate.now.format(DateTimeFormatter.ofPattern("yyyyMM")) else monthId
+    if (monthToCalcId.length != 6) throw new IllegalArgumentException
+
+    val params : java.util.Map[String, Object] =  new java.util.HashMap[String, Object]()
+    params.put("aggId", monthToCalcId)
+
+    val result = mongoTemplate.mapReduce(
+      Query.query(Criteria.where("_id").is(queryId)), //.and("daysStats.aggId").regex(s"^$monthToCalcId.*")),
+      "filter_queries",
+      "classpath:monthStatsMapper.js",
+      "classpath:statsReducer.js",
+      MapReduceOptions.options().scopeVariables(params).outputCollection("monthsStats_out"),
+      classOf[ValueObject])
+
+    if (result != null){
+      this.saveMonthStats(queryId, monthToCalcId, result.min, result.max, result.avg, result.median)
     }
-
-    val valueResults: MapReduceResults[ValueObject] = mongoTemplate.mapReduce(query, "filter_queries", "classpath:statsMapper.js", "classpath:statsReducer.js",
-      MapReduceOptions.options().outputCollection(containerName + "_out"), classOf[ValueObject])
-
-    val itr = valueResults.iterator
-    while (itr.hasNext){
-      val debug = itr.next.getValue
-
-//      val valuesList = (parse(result.body) \\ "result").children  // List[JString]
-//      if (valuesList.nonEmpty){
-//        return valuesList.head.extract[List[String]].map(x => BigDecimal(x))
-    }
-
-    CalculatedStatsContainer("1", "2", "3", "4")
   }
 
-  private case class CalculatedStatsContainer(min: String, max : String, avg : String, median : String)
+  /**
+    * Aggregate and calculate stats for passed year
+    * @param queryId filter query with data to calculate
+    * @param yearId year for which stats should be calculated (default current year)
+    */
+  def calculateAnnualStats(queryId: String, yearId: String = null): Unit = {
+    val yearToCalcId = if (yearId == null) LocalDate.now.format(DateTimeFormatter.ofPattern("yyyy")) else yearId
+    if (yearToCalcId.length != 4) throw new IllegalArgumentException
+
+    val params : java.util.Map[String, Object] =  new java.util.HashMap[String, Object]()
+    params.put("aggId", yearToCalcId)
+
+    val result = mongoTemplate.mapReduce(
+      Query.query(Criteria.where("_id").is(queryId)), //.and("monthsStats.aggId").regex(s"^$yearToCalcId.*")),
+      "filter_queries",
+      "classpath:yearStatsMapper.js",
+      "classpath:statsReducer.js",
+      MapReduceOptions.options().scopeVariables(params).outputCollection("yearsStats_out"),
+      classOf[ValueObject])
+
+    if (result != null){
+      this.saveYearStats(queryId, yearToCalcId, result.min, result.max, result.avg, result.median)
+    }
+  }
+
 }

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>scheduler</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.00.01</version>
 	<packaging>jar</packaging>
 
 	<name>scheduler</name>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>com.stats.aggregator</groupId>
         <artifactId>main-pom</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>1.00</version>
     </parent>
 
 	<properties>
@@ -69,18 +69,6 @@
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-hadoop</artifactId>
-            <version>LATEST</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-hadoop-config</artifactId>
-            <version>LATEST</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.scalaj/scalaj-http_2.11 -->
         <dependency>
             <groupId>org.scalaj</groupId>
@@ -107,51 +95,6 @@
             </exclusions>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.hive/hive-serde -->
-        <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-serde</artifactId>
-            <version>2.1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-hdfs</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>tomcat</groupId>
-                    <artifactId>jasper-runtime</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.curator</groupId>
-                    <artifactId>curator-framework</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.avro</groupId>
-                    <artifactId>avro</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>tomcat</groupId>
-                    <artifactId>jasper-compiler</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.aggregate</groupId>
-                    <artifactId>jetty-all</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -164,19 +107,25 @@
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.11</artifactId>
             <version>3.0.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.stats.aggregator</groupId>
             <artifactId>common</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.00</version>
         </dependency>
 
         <dependency>
             <groupId>com.stats.aggregator</groupId>
             <artifactId>data-objects</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.00</version>
         </dependency>
 
     </dependencies>

@@ -6,11 +6,11 @@
     <parent>
         <groupId>com.stats.aggregator</groupId>
         <artifactId>main-pom</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>1.00</version>
     </parent>
 
 	<artifactId>rest-api</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.00</version>
 	<packaging>jar</packaging>
 
 	<name>rest-api</name>
@@ -28,13 +28,13 @@
         <dependency>
             <groupId>com.stats.aggregator</groupId>
             <artifactId>common</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.00</version>
         </dependency>
 
         <dependency>
             <groupId>com.stats.aggregator</groupId>
             <artifactId>data-objects</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.00</version>
         </dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
