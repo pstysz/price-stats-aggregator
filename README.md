@@ -1,36 +1,54 @@
-# Price stats aggregator for Allegro auctions (in development)
+# Price stats aggregator for Allegro auctions
 
-Simple demo app, written in Java / Spring / MongoDB / Hadoop, to collect data about car prices, aggregate them and show statistics:
+Simple demo app, written in Java / Scala / Spring / MongoDB, to collect data about car prices, aggregate them and show statistics:
 - Min price
 - Max price
 - Avg price
 - Median price
 
-...in selected time interval.
+...in selected time intervals.
 
 ---------------------------------------------------------------------------
 
-# Api documentation (not deployed yet)
-Documentation has been generated in swagger and is available on [api-doc](http://deployed-api-url.com/swagger-ui.html) page.
+# Api documentation
+Documentation has been generated in swagger and is available on [api-doc](http://stats-aggregator-rest-api.eu-west-1.elasticbeanstalk.com/swagger-ui.html) page.
 
-# Demo application (not deployed yet)
-Demo app is avaiable under [demo-api](http://deployed-api-url.com/api) url. Credetials for test user:
+# Demo application
+Demo app is avaiable under [demo-api](http://stats-aggregator-rest-api.eu-west-1.elasticbeanstalk.com/api) url. Credetials for test user:
 name: test
 pass: test
 
 # Installation
 
-(here goes intall notes)
+Requirements:
++ Java SDK 1.8+
++ Scala 2.11.7+
++ MongoDb 3.4.0+
+
+Local application runs on port 5000 (rest-api) and 6000 (scheduler). Mongo database uses standard 27017 port. To change db settings go to common project -> resources.
+There is also sensitive.properties file, which isn’t pushed to repository. You need to create it in common/resources and fill with your values:
+
+```sh
+-#sensitive data NOT stored on git
+allegro.user=(your allegro user)
+allegro.password=(your allegro password)
+db.testuser.name=(test user name)
+db.testuser.pass=(test user pass)
+db.swagger.name=(swagger user name)
+db.swagger.pass=(swagger user pass)
+db.scheduler.name=(scheduler user name)
+db.scheduler.pass=(scheduler user pass)
+```
 
 # Example usage
 
 Firstly user has to log in to get unique authorization-key. 
 Example request content:
 ```sh
-POST http://localhost:8889/api/account/login HTTP/1.1
+POST http://localhost:5000/api/account/login HTTP/1.1
 Content-Type: text/json
 User-Agent: Fiddler
-Host: localhost:8889
+Host: localhost:5000
 Content-Length: 57
 
 {
@@ -98,13 +116,13 @@ Content-Length: 362
 
 To save tested query on db use request body in */api/query/* POST method. 
 
-# Calculating stats (not implemented yet)
+# Calculating stats
 
-Every hour scheduler will request data from Allegro, base on stored user-filters, and calculate statistic data.
+Every hour, day, month and year scheduler will request data from Allegro, base on stored user-filters, and calculate statistic data. To calculate values, applicatione uses mongo map reduce and aggregation framework.
 
-# Getting stats (not implemented yet)
+# Getting stats
 
-To get calculated stats, use */api/stats/* endpoint.
+To get calculated stats, use */api/stats/* endpoint. All requests descriptions are available on [api-doc](http://stats-aggregator-rest-api.eu-west-1.elasticbeanstalk.com/swagger-ui.html) page.
 
 # License 
 
