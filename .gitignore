@@ -35,3 +35,4 @@ hs_err_pid*
 target/
 logs/propertieslogs.log
 *.log
+common/src/main/resources/sensitive.properties
