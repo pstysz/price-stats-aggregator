@@ -157,8 +157,7 @@ import scala.language.implicitConversions
       classOf[ValueObject])
 
     if (result != null){
-      implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
-      this.saveDayStats(queryId, dayToCalcId, result.min, result.max, result.avg, result.median)
+      this.saveDayStats(queryId, dayToCalcId, BigDecimal(result.min), BigDecimal(result.max), BigDecimal(result.avg), BigDecimal(result.median))
     }
   }
 
@@ -183,8 +182,7 @@ import scala.language.implicitConversions
       classOf[ValueObject])
 
     if (result != null){
-      implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
-      this.saveMonthStats(queryId, monthToCalcId, result.min, result.max, result.avg, result.median)
+      this.saveMonthStats(queryId, monthToCalcId, BigDecimal(result.min), BigDecimal(result.max), BigDecimal(result.avg), BigDecimal(result.median))
     }
   }
 
@@ -209,8 +207,7 @@ import scala.language.implicitConversions
       classOf[ValueObject])
 
     if (result != null){
-      implicit def stringToBigDecimal(value: String) : BigDecimal = BigDecimal(value)
-      this.saveYearStats(queryId, yearToCalcId, result.min, result.max, result.avg, result.median)
+      this.saveYearStats(queryId, yearToCalcId, BigDecimal(result.min), BigDecimal(result.max), BigDecimal(result.avg), BigDecimal(result.median))
     }
   }
 

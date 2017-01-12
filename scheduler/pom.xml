@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>scheduler</artifactId>
-	<version>1.00.02</version>
+	<version>1.00.04</version>
 	<packaging>jar</packaging>
 
 	<name>scheduler</name>

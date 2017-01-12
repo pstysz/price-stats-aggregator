@@ -14,6 +14,6 @@ import org.springframework.stereotype.Component
     * Task runs every day at midnight
     */
   @Scheduled(cron = "0 0 0 * * *") def doEveryDay() {
-    accountRepository.removeExpiredAuthKeys()
+    //accountRepository.removeExpiredAuthKeys()
   }
 }

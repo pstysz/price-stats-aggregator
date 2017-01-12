@@ -11,10 +11,10 @@ Simple demo app, written in Java / Scala / Spring / MongoDB, to collect data abo
 ---------------------------------------------------------------------------
 
 # Api documentation
-Documentation has been generated in swagger and is available on [api-doc](http://stats-aggregator-rest-api.eu-west-1.elasticbeanstalk.com/swagger-ui.html) page.
+Documentation has been generated in swagger and is available on [api-doc](http://89.78.63.141/swagger-ui.html) page.
 
 # Demo application
-Demo app is avaiable under [demo-api](http://stats-aggregator-rest-api.eu-west-1.elasticbeanstalk.com/api) url. Credetials for test user:
+Demo app is avaiable under [demo-api](http://89.78.63.141/api) url. Credetials for test user:
 name: test
 pass: test
 
@@ -45,7 +45,7 @@ db.scheduler.pass=(scheduler user pass)
 Firstly user has to log in to get unique authorization-key. 
 Example request content:
 ```sh
-POST http://localhost:5000/api/account/login HTTP/1.1
+POST http://89.78.63.141/api/account/login HTTP/1.1
 Content-Type: text/json
 User-Agent: Fiddler
 Host: localhost:5000
@@ -65,7 +65,7 @@ x-authorization-key: fwe4f34qfqfq34fqf
 Next step should be selection of category to filter by. Currently api handle only car categories. To get list of all avaiable categories, with their id, call */api/filter/categories*
 
 ```sh
-GET http://localhost:8889/api/filter/categories HTTP/1.1
+GET http://89.78.63.141/api/filter/categories HTTP/1.1
 Content-Type: text/json
 User-Agent: Fiddler
 Host: localhost:8889
@@ -77,7 +77,7 @@ Every category has unique ID. Passing ID to */api/filter/categories/{categoryId}
 Base on recieved filters list, it is possible to compose query, to filter auctions. Let's assume, that we want to find all Fiat Punto's, with max price = 13000zl, year of production between 2005 and 2007, at least 1350ccm engine capacity, for petrol fuel, undamaged. To test filters, and get all filtered auctions, use */api/filter/* POST method:
 
 ```sh
-POST http://localhost:8889/api/filter/ HTTP/1.1
+POST http://89.78.63.141/api/filter/ HTTP/1.1
 Content-Type: application/json
 User-Agent: Fiddler
 Host: localhost:8889
@@ -122,7 +122,7 @@ Every hour, day, month and year scheduler will request data from Allegro, base o
 
 # Getting stats
 
-To get calculated stats, use */api/stats/* endpoint. All requests descriptions are available on [api-doc](http://stats-aggregator-rest-api.eu-west-1.elasticbeanstalk.com/swagger-ui.html) page.
+To get calculated stats, use */api/stats/* endpoint. All requests descriptions are available on [api-doc](http://89.78.63.141/swagger-ui.html) page.
 
 # License 
 
